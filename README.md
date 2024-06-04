@@ -1,11 +1,9 @@
 # Ticketing WebApp
 
 ## Starting flask server
-<ol>
-  <li>cd to the flask server</li>
-  <li>Activate vitual environment
-  </li>
-    ```
-  .\venv\Scripts\activate
-  ```
-</ol>
+1.  cd to flask server
+2.  awd
+
+```
+.venv\Scripts\activate
+```
