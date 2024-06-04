@@ -1,6 +1,6 @@
-<h1>Ticketing WebApp</h1>
+# Ticketing WebApp
 
-<h2>Starting Flask Server</h2>
+## Starting flask server
 <ol>
   <li>cd to the flask server</li>
   <li>Activate vitual environment
