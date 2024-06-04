@@ -4,8 +4,8 @@
 <ol>
   <li>cd to the flask server</li>
   <li>Activate vitual environment
-  ```
+  </li>
+    ```
   .\venv\Scripts\activate
   ```
-  </li>
 </ol>
