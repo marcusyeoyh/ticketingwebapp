@@ -2,6 +2,10 @@
 
 <h2>Starting Flask Server</h2>
 <ol>
-  <li>```cd``` to the flask server</li>
-  <li>Hello again</li>
+  <li>cd to the flask server</li>
+  <li>Activate vitual environment
+  ```
+  .\venv\Scripts\activate
+  ```
+  </li>
 </ol>
