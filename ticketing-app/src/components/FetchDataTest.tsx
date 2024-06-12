@@ -13,7 +13,7 @@ const FetchDataTest = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/test`);
+        const response = await axios.get(`${apiUrl}/testdb`);
         setData(response.data);
       } catch (error: any) {
         setError(error.message);
