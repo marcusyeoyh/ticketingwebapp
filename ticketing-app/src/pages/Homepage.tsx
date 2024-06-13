@@ -1,13 +1,16 @@
 import React from "react";
-import FetchDataTest from "../components/FetchDataTest";
+import UserName from "../components/user-attributes/UserName";
+import NavBar from "../components/NavBar";
+import ProcessSelect from "../components/ProcessSelect";
 
 const Homepage = () => {
   return (
     <>
-      <h1>Welcome to the Homepage!</h1>
-      <div>
-        <FetchDataTest />
-      </div>
+      <NavBar />
+      <h3>
+        What process would you like to raise today <UserName />?
+      </h3>
+      <ProcessSelect />
     </>
   );
 };

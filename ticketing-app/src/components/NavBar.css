@@ -1,0 +1,45 @@
+.navbar-custom {
+  background-color: #274472;
+}
+
+.navbar-custom .navbar-brand {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-custom .navbar-brand:hover,
+.navbar-custom .navbar-brand:focus {
+  color: white;
+}
+
+.navbar-custom .navbar-toggler {
+  color: white;
+  border-color: white;
+}
+
+.navbar-custom .nav-link,
+.navbar-custom .navbar-nav .nav-link {
+  color: grey;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .navbar-nav .nav-link:hover {
+  color: yellow;
+}
+
+.navbar-custom .nav-link.active,
+.navbar-custom .navbar-nav .nav-link.active {
+  color: white;
+}
+
+.navbar-custom .navbar-brand .bi-telegram {
+  margin-right: 0.5rem;
+}
+
+.navbar-custom .nav-link .bi-person-circle {
+  margin-right: 0.5rem;
+}
+
+.navbar-custom .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}

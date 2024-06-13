@@ -13,7 +13,7 @@ import uuid
 curDirectory = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
-CORS(app, origins="*")
+CORS(app, supports_credentials=True, origins=["http://168.10.10.1:3000"])
 
 # Configure logging to use a directory with write permissions
 log_file_path = r'C:\inetpub\wwwroot\logs\app.log'
