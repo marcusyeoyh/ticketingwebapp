@@ -1,39 +1,71 @@
 import React from "react";
+import "./ProcessSelect.css";
+import { NavLink } from "react-router-dom";
 
 const ProcessSelect = () => {
   return (
     <div className="list-group">
       <a
         href="#"
-        className="list-group-item list-group-item-action"
+        className="list-group-item list-group-item-action list-group-item-custom"
         aria-current="true"
+        data-bs-toggle="collapse"
+        data-bs-target="#SLMPCollapse"
+        aria-expanded="false"
+        aria-controls="SLMP Collapsible"
       >
-        <div className="d-flex w-100 justify-content-between">
-          <h5 className="mb-1">List group item heading</h5>
-          <small>3 days ago</small>
+        <i className="bi bi-code-square icon-large"></i>
+        <div>
+          <div className="d-flex w-100 justify-content-between">
+            <h5 className="mb-1">Software License Management Process</h5>
+          </div>
+          <p className="mb-1">Install, Transfer or Delete a Software License</p>
         </div>
-        <p className="mb-1">Some placeholder content in a paragraph.</p>
-        <small>And some small print.</small>
       </a>
-      <a href="#" className="list-group-item list-group-item-action">
-        <div className="d-flex w-100 justify-content-between">
-          <h5 className="mb-1">List group item heading</h5>
-          <small className="text-body-secondary">3 days ago</small>
+      <div className="collapse" id="SLMPCollapse">
+        <div className="card card-body">
+          <div>
+            <p>
+              <NavLink className="nav-link" to="/slmp-install">
+                Request to install new software license
+              </NavLink>
+            </p>
+            <p>
+              <NavLink className="nav-link" to="/slmp-transfer">
+                Request to transfer software license
+              </NavLink>
+            </p>
+            <p>
+              <NavLink className="nav-link" to="/slmp-delete">
+                Request to remove license
+              </NavLink>
+            </p>
+          </div>
         </div>
-        <p className="mb-1">Some placeholder content in a paragraph.</p>
-        <small className="text-body-secondary">
-          And some muted small print.
-        </small>
+      </div>
+      <a
+        href="#"
+        className="list-group-item list-group-item-action list-group-item-custom"
+      >
+        <i className="bi bi-pc-display icon-large"></i>
+        <div>
+          <div className="d-flex w-100 justify-content-between">
+            <h5 className="mb-1">IT Assets Management Process</h5>
+          </div>
+          <p className="mb-1">Manage IT Assets</p>
+        </div>
       </a>
-      <a href="#" className="list-group-item list-group-item-action">
-        <div className="d-flex w-100 justify-content-between">
-          <h5 className="mb-1">List group item heading</h5>
-          <small className="text-body-secondary">3 days ago</small>
+      <a
+        href="#"
+        className="list-group-item list-group-item-action list-group-item-custom"
+      >
+        <i className="bi bi-envelope-open-heart icon-large"></i>
+        <div>
+          <div className="d-flex w-100 justify-content-between">
+            <h5 className="mb-1">Enquiry and Feedback</h5>
+          </div>
+          <p className="mb-1">Give us some feedback!</p>
         </div>
-        <p className="mb-1">Some placeholder content in a paragraph.</p>
-        <small className="text-body-secondary">
-          And some muted small print.
-        </small>
       </a>
     </div>
   );

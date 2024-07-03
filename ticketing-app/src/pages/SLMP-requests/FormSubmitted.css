@@ -1,0 +1,26 @@
+/* src/components/FormSubmitted.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+  text-align: center;
+}
+
+.icon {
+  font-size: 5rem;
+  color: green;
+  margin-bottom: 0.5rem;
+}
+
+.icon-stop {
+  font-size: 5rem;
+  color: red;
+  margin-bottom: 0.5rem;
+}
+
+.btn-custom {
+  background-color: green;
+  border-color: green;
+}

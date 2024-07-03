@@ -1,16 +1,26 @@
-import React from "react";
-import UserName from "../components/user-attributes/UserName";
+import React, { useContext } from "react";
 import NavBar from "../components/NavBar";
-import ProcessSelect from "../components/ProcessSelect";
+import TaskBar from "../components/TaskBar";
+import { GetFullName } from "../utils/GetUserInfo";
 
 const Homepage = () => {
+  const { fullname, loadingFullname, errorFullname } = GetFullName();
+
+  if (loadingFullname) {
+    return <div>Loading Name...</div>;
+  }
+
+  if (errorFullname) {
+    return <div>Error: {errorFullname}</div>;
+  }
+
   return (
     <>
       <NavBar />
-      <h3>
-        What process would you like to raise today <UserName />?
+      <h3 style={{ margin: "0.5rem" }}>
+        What would you like to do today {fullname}?
       </h3>
-      <ProcessSelect />
+      <TaskBar />
     </>
   );
 };

@@ -27,8 +27,7 @@ const UserProfile = () => {
         <strong>Manager:</strong> {user?.manager}
       </p>
       <p>
-        <strong>Member Of:</strong>
-        {user?.member_of}
+        <strong>Role: </strong> {user?.user_role}
       </p>
     </div>
   );

@@ -1,0 +1,10 @@
+.list-group .list-group-item-custom .icon-large {
+  font-size: 2rem; /* Increase the icon size */
+  align-self: center; /* Center the icon vertically */
+  margin-right: 1rem;
+}
+
+.list-group .list-group-item-custom {
+  display: flex;
+  align-items: center;
+}

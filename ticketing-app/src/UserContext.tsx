@@ -20,7 +20,7 @@ interface UserInfo {
   job_title: string | null;
   last_name: string | null;
   manager: string | null;
-  member_of: string[] | null;
+  user_role: string | null;
   mobile_number: string | null;
   object_guid: string | null;
   postal_code: string | null;
@@ -48,6 +48,20 @@ export const useUser = (): UserContextType => {
 };
 
 const processData = (rawData: any): UserInfo => {
+  const memberOf = Array.isArray(rawData.member_of)
+    ? rawData.member_of.map(
+        (group: string) => group.split(",")[0].split("=")[1]
+      )
+    : rawData.member_of.split(",")[0].split("=")[1];
+
+  let userRole = "NIL";
+
+  if (memberOf.includes("Approving Officers")) {
+    userRole = "Approving Officer";
+  } else if (memberOf.includes("Endorsing Officers")) {
+    userRole = "Endorsing Officer";
+  }
+
   return {
     city: rawData.city,
     company: rawData.company,
@@ -63,11 +77,7 @@ const processData = (rawData: any): UserInfo => {
     manager: rawData.manager
       ? rawData.manager.split(",")[0].split("=")[1]
       : null,
-    member_of: Array.isArray(rawData.member_of)
-      ? rawData.member_of.map(
-          (group: string) => group.split(",")[0].split("=")[1]
-        )
-      : [],
+    user_role: userRole,
     mobile_number: rawData.mobile_number,
     object_guid: rawData.object_guid,
     postal_code: rawData.postal_code,
@@ -85,8 +95,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const apiUrl =
-      import.meta.env.VITE_API_BASE_URL || "http://168.10.10.1:5000";
+    const apiUrl = "http://168.10.10.1:5000";
     const fetchData = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/user`, {
