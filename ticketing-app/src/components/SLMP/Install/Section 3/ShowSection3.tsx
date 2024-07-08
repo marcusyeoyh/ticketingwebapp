@@ -21,7 +21,7 @@ const ShowSection3: React.FC<ShowSection3Props> = ({ id }) => {
   useEffect(() => {
     const findData = async () => {
       try {
-        const data = await findSec1Info("/find-slmp", id);
+        const data = await findSec1Info("/slmp/install/full-form", id);
         setSec3Data(data[0]);
       } catch (error) {
         setError(error as Error);
@@ -45,7 +45,7 @@ const ShowSection3: React.FC<ShowSection3Props> = ({ id }) => {
       <div className="d-flex justify-content-between align-items-center">
         <div>
           <h5>Section 3: Approval of Request for usage of software license</h5>
-          <p>Endorse Status: {sec3Data?.Approved}</p>
+          <p>Approve Status: {sec3Data?.Approved}</p>
         </div>
       </div>
       {sec3Data?.ApproveFullName && (

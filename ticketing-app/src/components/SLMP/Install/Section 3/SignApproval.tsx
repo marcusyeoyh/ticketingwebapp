@@ -31,7 +31,7 @@ const SignApproval: React.FC<SignApprovalProp> = ({ id }) => {
     try {
       if (approveData["Action"] == "Approve") {
         const data = await submitForm(
-          "/submit_SLMP_Form-Install_sec3",
+          "/submitslmp/install/section3",
           approveData
         );
         console.log("Form approved successfully:", data["Request ID"]);
@@ -40,7 +40,7 @@ const SignApproval: React.FC<SignApprovalProp> = ({ id }) => {
         });
       } else if (approveData["Action"] == "Reject") {
         const data = await submitForm(
-          "/submit_SLMP_Form-Install_sec3_reject",
+          "/submitslmp/install/section3-reject",
           approveData
         );
         console.log("Form rejected successfully:", data["Request ID"]);

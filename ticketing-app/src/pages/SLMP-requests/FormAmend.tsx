@@ -62,7 +62,7 @@ const FormAmend = () => {
     const fetchData = async () => {
       if (id) {
         try {
-          const response = await findSec1Info("/find-slmp", id);
+          const response = await findSec1Info("/slmp/install/full-form", id);
           setData(response[0]);
         } catch (error) {
           setError(error as Error);
@@ -124,7 +124,7 @@ const FormAmend = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = await submitForm("/amend_SLMP_Form-Install", newData);
+      const data = await submitForm("/submitslmp/install/amend", newData);
       console.log("Form amended successfully:", data["Request ID"]);
       navigate("/form-submitted", {
         state: { formid: data["Request ID"] },
@@ -437,9 +437,9 @@ const FormAmend = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="col-12">
+          <div className="col-12 d-flex justify-content-center">
             <button type="submit" className="btn btn-primary">
-              Submit Form
+              Amend Form
             </button>
           </div>
         </form>

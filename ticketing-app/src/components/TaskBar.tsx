@@ -5,6 +5,7 @@ import PendingEndorsement from "./PendingEndorsement";
 import PendingApproval from "./PendingApproval";
 import ShowAllReq from "./SLMP/Install/ShowAllReq";
 import ShowSLMPRejected from "./SLMP/Install/Rejected/ShowSLMPRejected";
+import PendingReject from "./PendingReject";
 
 const TaskBar = () => {
   const [pendingReq, setPendingReq] = useState(0);
@@ -179,7 +180,7 @@ const TaskBar = () => {
           role="tabpanel"
           aria-labelledby="nav-pending-reject-tab"
         >
-          <ShowSLMPRejected onRejectCountChange={handleRejectCount} />
+          <PendingReject onRejectCountChange={handleRejectCount} />
         </div>
         <div
           className="tab-pane fade"

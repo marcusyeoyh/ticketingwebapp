@@ -35,7 +35,7 @@ const ShowSLMPInstall: React.FC<ShowSLMPInstallProps> = ({
       if (username) {
         try {
           const result = await findRequests(
-            "/find-slmp-install-pending",
+            "/slmp/install/find-pending",
             username
           );
           setData(result);

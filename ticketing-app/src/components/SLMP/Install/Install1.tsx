@@ -60,7 +60,7 @@ const Install1: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = await submitForm("/submit_SLMP_Form-Install", formData);
+      const data = await submitForm("/submitslmp/install/section1", formData);
       console.log("Form submitted successfully:", data["Request ID"]);
       navigate("/form-submitted", {
         state: { formid: data["Request ID"] },
@@ -161,7 +161,9 @@ const Install1: React.FC = () => {
           onChange={handleChange}
           required
         >
-          <option value="">Select...</option>
+          <option value="" disabled>
+            Select...
+          </option>
           <option value="ericong">Eric Ong</option>
           <option value="EO2">EO2</option>
           <option value="Administrator">EO3</option>
@@ -179,7 +181,9 @@ const Install1: React.FC = () => {
           onChange={handleChange}
           required
         >
-          <option value="">Select...</option>
+          <option value="" disabled>
+            Select...
+          </option>
           <option value="AO1">AO1</option>
           <option value="AO2">AO2</option>
           <option value="Administrator">AO3</option>
@@ -280,7 +284,9 @@ const Install1: React.FC = () => {
           onChange={handleChange}
           required
         >
-          <option value="">Select...</option>
+          <option value="" disabled>
+            Select...
+          </option>
           <option value="PDL">PDL</option>
           <option value="LGPL">LGPL</option>
           <option value="Permissive">Permissive</option>
@@ -301,7 +307,9 @@ const Install1: React.FC = () => {
           onChange={handleChange}
           required
         >
-          <option value="">Select...</option>
+          <option value="" disabled>
+            Select...
+          </option>
           <option value="Standalone">Standalone</option>
           <option value="Node-Locked">Node-Locked</option>
           <option value="Floating">Floating</option>
@@ -365,7 +373,7 @@ const Install1: React.FC = () => {
           onChange={handleChange}
         />
       </div>
-      <div className="col-12">
+      <div className="col-12 d-flex justify-content-center">
         <button type="submit" className="btn btn-primary">
           Submit Form
         </button>

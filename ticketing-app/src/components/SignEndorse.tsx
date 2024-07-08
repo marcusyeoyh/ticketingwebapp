@@ -37,7 +37,7 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
     try {
       if (endorseData["Action"] == "endorse") {
         const data = await submitForm(
-          "/submit_SLMP_Form-Install_sec2",
+          "/submitslmp/install/section2",
           endorseData
         );
         console.log("Form endorsed successfully:", data["Request ID"]);
@@ -46,7 +46,7 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
         });
       } else if (endorseData["Action"] == "reject") {
         const data = await submitForm(
-          "/submit_SLMP_Form-Install_sec2_reject",
+          "/submitslmp/install/section2-reject",
           endorseData
         );
         console.log("Form rejected:", data["Request ID"]);

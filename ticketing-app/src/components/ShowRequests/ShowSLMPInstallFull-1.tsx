@@ -17,14 +17,6 @@ type SLMPSec1Data = {
   LicenseValidity: string;
   AdditionalInfo: string;
   Remarks: string;
-  EndorserID: string;
-  Endorsed: string;
-  EndorseRemarks: string;
-  EndorseDate: string;
-  ApproverID: string;
-  Approved: string;
-  ApprovalRemarks: string;
-  ApproveDate: string;
   FileLink: string;
 };
 
@@ -42,7 +34,7 @@ const ShowSLMPInstallFullSection1: React.FC<
   useEffect(() => {
     const findData = async () => {
       try {
-        const response = await findSec1Info("/find-slmp", id);
+        const response = await findSec1Info("/slmp/install/full-form", id);
         setSec1Data(response[0]);
       } catch (sec1Error) {
         setSec1Error(sec1Error as Error);

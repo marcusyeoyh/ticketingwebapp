@@ -27,7 +27,7 @@ const ShowSection2: React.FC<ShowSection2Props> = ({ id }) => {
   useEffect(() => {
     const findData = async () => {
       try {
-        const data = await findSec1Info("/find-slmp", id);
+        const data = await findSec1Info("/slmp/install/full-form", id);
         setSec2Data(data[0]);
       } catch (error) {
         setError(error as Error);

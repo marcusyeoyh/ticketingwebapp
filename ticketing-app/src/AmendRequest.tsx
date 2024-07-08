@@ -25,7 +25,10 @@ const AmendRequest: React.FC<AmendRequestProps> = ({ element }) => {
     const fetchData = async () => {
       if (username) {
         try {
-          const response = await findRequests("/find-reqid", username);
+          const response = await findRequests(
+            "/slmp/install/find-reqid",
+            username
+          );
           setData(response);
         } catch (error) {
           setError(error as Error);

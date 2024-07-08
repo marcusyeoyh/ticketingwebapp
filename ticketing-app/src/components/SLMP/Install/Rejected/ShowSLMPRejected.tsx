@@ -37,7 +37,7 @@ const ShowSLMPRejected: React.FC<ShowSLMPRejectedProps> = ({
       if (username) {
         try {
           const response = await findRequests(
-            "/find-slmp-rejections",
+            "/slmp/install/find-rejections",
             username
           );
           setData(response);
@@ -64,7 +64,7 @@ const ShowSLMPRejected: React.FC<ShowSLMPRejectedProps> = ({
   };
   return (
     <div style={{ margin: "1rem" }}>
-      <h4>Pending SLMP Requests:</h4>
+      <h4>SLMP Install Requests:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
           <thead>
@@ -90,7 +90,7 @@ const ShowSLMPRejected: React.FC<ShowSLMPRejectedProps> = ({
                     className="btn btn-primary"
                     onClick={() => handleClick(request.RequestID)}
                   >
-                    Approve/More Information
+                    More Information
                   </button>
                 </td>
               </tr>

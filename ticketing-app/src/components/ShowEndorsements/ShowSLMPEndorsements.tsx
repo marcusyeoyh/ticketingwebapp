@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import "../../App.css";
 import { GetUsername } from "../../utils/GetUserInfo";
 import { findEndorsements } from "../API";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +36,7 @@ const ShowSLMPEndorsements: React.FC<ShowEndorsementsProps> = ({
       if (username) {
         try {
           const response = await findEndorsements(
-            "/find-slmp-endorsements",
+            "/slmp/install/find-endorsements",
             username
           );
           setData(response);
@@ -67,7 +66,7 @@ const ShowSLMPEndorsements: React.FC<ShowEndorsementsProps> = ({
 
   return (
     <div style={{ margin: "1rem" }}>
-      <h4>Pending SLMP Requests:</h4>
+      <h4>Pending SLMP Install Requests:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
           <thead>

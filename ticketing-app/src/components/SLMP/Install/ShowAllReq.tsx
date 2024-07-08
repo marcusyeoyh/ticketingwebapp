@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../../UserContext";
 import { GetUsername } from "../../../utils/GetUserInfo";
 import { findRequests } from "../../API";
 
@@ -30,7 +29,10 @@ const ShowAllReq = () => {
     const fetchData = async () => {
       if (username) {
         try {
-          const response = await findRequests("/find-slmp-install", username);
+          const response = await findRequests(
+            "/slmp/install/find-all",
+            username
+          );
           setData(response);
         } catch (error) {
           setError(error as Error);

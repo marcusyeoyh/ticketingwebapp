@@ -98,7 +98,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const apiUrl = "http://168.10.10.1:5000";
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/user`, {
+        const response = await axios.get(`${apiUrl}/api/user/`, {
           withCredentials: true,
         });
         const processedData = processData(response.data);

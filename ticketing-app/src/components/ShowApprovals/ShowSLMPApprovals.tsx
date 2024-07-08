@@ -36,7 +36,7 @@ const ShowSLMPApprovals: React.FC<ShowSLMPApprovalsProps> = ({
       if (username) {
         try {
           const response = await findApprovals(
-            "/find-slmp-approvals",
+            "/slmp/install/find-approvals",
             username
           );
           setData(response);
@@ -65,17 +65,29 @@ const ShowSLMPApprovals: React.FC<ShowSLMPApprovalsProps> = ({
 
   return (
     <div style={{ margin: "1rem" }}>
-      <h4>Pending SLMP Requests:</h4>
+      <h4>Pending SLMP Install Requests:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
           <thead>
             <tr>
-              <th scope="col">Request ID</th>
-              <th scope="col">ROID</th>
-              <th scope="col">Endorser</th>
-              <th scope="col">Approver</th>
-              <th scope="col">Date Requested</th>
-              <th scope="col">Further Actions</th>
+              <th scope="col" style={{ width: "200px" }}>
+                Request ID
+              </th>
+              <th scope="col" style={{ width: "200px" }}>
+                ROID
+              </th>
+              <th scope="col" style={{ width: "200px" }}>
+                Endorser
+              </th>
+              <th scope="col" style={{ width: "200px" }}>
+                Approver
+              </th>
+              <th scope="col" style={{ width: "200px" }}>
+                Date Requested
+              </th>
+              <th scope="col" style={{ width: "200px" }}>
+                Further Actions
+              </th>
             </tr>
           </thead>
           <tbody>
