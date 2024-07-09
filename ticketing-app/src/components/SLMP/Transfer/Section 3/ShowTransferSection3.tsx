@@ -50,7 +50,7 @@ const ShowTransferSection3: React.FC<ShowTransferSection3Props> = ({ id }) => {
           <p>Approve Status: {sec3Data?.Approved}</p>
         </div>
       </div>
-      {sec3Data?.ApproveFullName && (
+      {sec3Data?.Approved != "Pending" && (
         <table
           style={{
             width: "100%",

@@ -12,6 +12,7 @@ type SLMPTransferEndorsements = {
   ROID: string;
   EndorserID: string;
   ApproverID: string;
+  NewAssignee: string;
   Date: string;
 };
 
@@ -66,7 +67,7 @@ const ShowTransferEndorsements: React.FC<ShowTransferEndorsementsProps> = ({
 
   return (
     <div style={{ margin: "1rem" }}>
-      <h4>Pending SLMP Install Requests:</h4>
+      <h4>Pending SLMP Transfer Requests:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
           <thead>
@@ -75,6 +76,7 @@ const ShowTransferEndorsements: React.FC<ShowTransferEndorsementsProps> = ({
               <th scope="col">ROID</th>
               <th scope="col">Endorser</th>
               <th scope="col">Approver</th>
+              <th scope="col">New Assignee</th>
               <th scope="col">Date Requested</th>
               <th scope="col">Further Actions</th>
             </tr>
@@ -86,6 +88,7 @@ const ShowTransferEndorsements: React.FC<ShowTransferEndorsementsProps> = ({
                 <td>{request.ROID}</td>
                 <td>{request.EndorserID}</td>
                 <td>{request.ApproverID}</td>
+                <td>{request.NewAssignee}</td>
                 <td>{request.Date}</td>
                 <td>
                   <button

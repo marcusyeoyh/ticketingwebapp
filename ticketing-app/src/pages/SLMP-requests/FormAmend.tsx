@@ -431,7 +431,7 @@ const FormAmend = () => {
               type="file"
               className="form-control"
               id="fileUpload"
-              name="fileUpload"
+              name="FileUpload"
               aria-describedby="inputGroupFileAddon04"
               aria-label="fileUpload"
               onChange={handleChange}

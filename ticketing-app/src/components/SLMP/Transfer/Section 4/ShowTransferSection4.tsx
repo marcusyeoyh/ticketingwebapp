@@ -10,6 +10,7 @@ type Section4Data = {
   AcceptFullName: string;
   AcceptDivisionProgram: string;
   AcceptDate: string;
+  AcceptRemarks: string;
 };
 
 const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
@@ -49,7 +50,7 @@ const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
           <p>Acceptance Status: {sec3Data?.Accepted}</p>
         </div>
       </div>
-      {sec3Data?.AcceptFullName && (
+      {sec3Data?.Accepted != "Pending" && (
         <table
           style={{
             width: "100%",
@@ -94,6 +95,20 @@ const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
               >
                 <b>Date of Approval:</b>
                 <div>{sec3Data?.AcceptDate}</div>
+              </td>
+            </tr>
+            <tr
+              style={{ display: "table", width: "100%", tableLayout: "fixed" }}
+            >
+              <td
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  border: "1px solid black",
+                }}
+              >
+                <b>Remarks:</b>
+                <div>{sec3Data?.AcceptRemarks}</div>
               </td>
             </tr>
           </tbody>

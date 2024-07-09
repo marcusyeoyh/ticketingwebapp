@@ -3,14 +3,15 @@ import ProcessSelect from "./ProcessSelect";
 import PendingRequests from "./PendingRequests";
 import PendingEndorsement from "./PendingEndorsement";
 import PendingApproval from "./PendingApproval";
-import ShowAllReq from "./SLMP/Install/ShowAllReq";
-import ShowSLMPRejected from "./SLMP/Install/Rejected/ShowSLMPRejected";
 import PendingReject from "./PendingReject";
+import AllReq from "./AllReq";
+import ShowTransferAccept from "./SLMP/Transfer/ShowRequests/ShowTransferAccept";
 
 const TaskBar = () => {
   const [pendingReq, setPendingReq] = useState(0);
   const [endorseCount, setEndorseCount] = useState(0);
   const [approveCount, setApproveCount] = useState(0);
+  const [acceptCount, setAcceptCount] = useState(0);
   const [rejectCount, setRejectCount] = useState(0);
 
   const handlePendingReqChange = useCallback((count: number) => {
@@ -23,6 +24,10 @@ const TaskBar = () => {
 
   const handleApproveCount = useCallback((count: number) => {
     setApproveCount(count);
+  }, []);
+
+  const handleAcceptCount = useCallback((count: number) => {
+    setAcceptCount(count);
   }, []);
 
   const handleRejectCount = useCallback((count: number) => {
@@ -106,6 +111,27 @@ const TaskBar = () => {
               </span>
             </button>
           )}
+          {acceptCount > 0 && (
+            <button
+              className="nav-link"
+              id="nav-pending-accept-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#nav-pending-accept"
+              type="button"
+              role="tab"
+              aria-controls="nav-pending-accept"
+              aria-selected="false"
+              disabled={acceptCount == 0}
+            >
+              Requests pending accept
+              <span
+                className="badge text-bg-danger rounded-pill"
+                style={{ marginLeft: "0.5rem" }}
+              >
+                {acceptCount}
+              </span>
+            </button>
+          )}
           {rejectCount > 0 && (
             <button
               className="nav-link"
@@ -176,6 +202,14 @@ const TaskBar = () => {
         </div>
         <div
           className="tab-pane fade"
+          id="nav-pending-accept"
+          role="tabpanel"
+          aria-labelledby="nav-pending-accept-tab"
+        >
+          <ShowTransferAccept onAcceptCountChange={handleAcceptCount} />
+        </div>
+        <div
+          className="tab-pane fade"
           id="nav-pending-reject"
           role="tabpanel"
           aria-labelledby="nav-pending-reject-tab"
@@ -188,7 +222,7 @@ const TaskBar = () => {
           role="tabpanel"
           aria-labelledby="nav-request-history-tab"
         >
-          <ShowAllReq />
+          <AllReq />
         </div>
       </div>
     </>

@@ -76,10 +76,7 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
   return (
     <div style={{ margin: "1rem" }}>
       <h5>Endorse form below:</h5>
-      <p>
-        Software tracking is needed for Permissive, CopyLeft, Non-Commercial and
-        Proprietary License
-      </p>
+
       <form onSubmit={handleSubmit} className="row g-3">
         <div className="col-md-4">
           <label htmlFor="id" className="form-label">

@@ -65,7 +65,7 @@ const ShowTransferSection2: React.FC<ShowTransferSection2Props> = ({ id }) => {
           <p>Endorse Status: {sec2Data?.Endorsed}</p>
         </div>
 
-        {sec2Data?.EndorseAttachment && (
+        {sec2Data?.EndorseAttachment && sec2Data?.Endorsed != "Pending" && (
           <button
             className="btn btn-primary"
             style={{
@@ -81,7 +81,7 @@ const ShowTransferSection2: React.FC<ShowTransferSection2Props> = ({ id }) => {
           </button>
         )}
       </div>
-      {sec2Data?.EndorseFullName && (
+      {sec2Data?.Endorsed != "Pending" && (
         <table
           style={{
             width: "100%",

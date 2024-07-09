@@ -11,6 +11,7 @@ type SLMPTransfer = {
   RequestID: number;
   Endorsed: string;
   Approved: string;
+  Accepted: string;
   Date: string;
 };
 
@@ -72,6 +73,7 @@ const ShowSLMPTransfer: React.FC<ShowSLMPTransferProps> = ({
               <th scope="col">Request ID</th>
               <th scope="col">Endorsed Status</th>
               <th scope="col">Approved Status</th>
+              <th scope="col">Accept Status</th>
               <th scope="col">Date Requested</th>
               <th scope="col">Further Actions</th>
             </tr>
@@ -82,6 +84,7 @@ const ShowSLMPTransfer: React.FC<ShowSLMPTransferProps> = ({
                 <th scope="row">{request.RequestID}</th>
                 <td>{request.Endorsed}</td>
                 <td>{request.Approved}</td>
+                <td>{request.Accepted}</td>
                 <td>{request.Date}</td>
                 <td>
                   <button

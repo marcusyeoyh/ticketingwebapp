@@ -386,7 +386,7 @@ const Transfer1 = () => {
           id="fileUpload"
           name="fileUpload"
           aria-describedby="inputGroupFileAddon04"
-          aria-label="fileUpload"
+          aria-label="FileUpload"
           onChange={handleChange}
         />
       </div>

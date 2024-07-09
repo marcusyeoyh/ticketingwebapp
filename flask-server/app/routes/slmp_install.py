@@ -30,7 +30,7 @@ def find_slmp_install():
 
         results_list = []
         for row in results:
-            endorsed_status = "Approved" if row[2] == 1 else "Pending" if row[2] == 0 else "Rejected"
+            endorsed_status = "Endorsed" if row[2] == 1 else "Pending" if row[2] == 0 else "Rejected"
             approved_status = "Approved" if row[1] == 1 else "Pending" if row[1] == 0 else "Rejected"
 
             results_list.append({
@@ -222,9 +222,9 @@ def fullform():
             remarks = "NIL" if not row[17] else row[17]
             endorsedstatus = "Endorsed" if row[21] == 1 else "Pending" if row[21] == 0 else "Rejected"
             approvalstatus = "Approved" if row[20] == 1 else "Pending" if row[20] == 0 else "Rejected"
-            endorseadditionalinfo = "NIL" if not row[31] else row[31]
-            endorseremarks = "NIL" if not row[32] else row[32]
-            approveremarks = "NIL" if not row[37] else row[37]
+            endorseadditionalinfo = "NIL" if not row[30] else row[30]
+            endorseremarks = "NIL" if not row[31] else row[31]
+            approveremarks = "NIL" if not row[36] else row[36]
 
             results_list.append({
                 "ROID": row[1],
@@ -242,25 +242,25 @@ def fullform():
                 "LicenseType": row[13],
                 "LicensingScheme": row[14],
                 "LicenseValidity": row[15],
-                "FileLink": row[18],
                 "AdditionalInfo": additionalinfo,
                 "Remarks": remarks,
+                "FileLink": row[18],
                 "Approved": approvalstatus,
                 "Endorsed": endorsedstatus,
-                "EndorseFullName": row[24],
-                "EndorseDate": row[25],
-                "EndorseDivisionProgram": row[26],
-                "EndorseVerification": row[27],
-                "EndorseSupported": row[28],
-                "EndorseTracking": row[29],
-                "EndorseBlanketApproval": row[30],
+                "EndorseFullName": row[23],
+                "EndorseDate": row[24],
+                "EndorseDivisionProgram": row[25],
+                "EndorseVerification": row[26],
+                "EndorseSupported": row[27],
+                "EndorseTracking": row[28],
+                "EndorseBlanketApproval": row[29],
                 "EndorseAdditionalInfo": endorseadditionalinfo,
                 "EndorseRemarks": endorseremarks,
-                "EndorseAttachment": row[33],
-                "ApproveFullName": row[35],
-                "ApproveDivisionProgram": row[36],
+                "EndorseAttachment": row[32],
+                "ApproveFullName": row[34],
+                "ApproveDivisionProgram": row[35],
                 "ApproveRemarks": approveremarks,
-                "ApproveDate": row[38],
+                "ApproveDate": row[37],
             })
         connection.close()
         return jsonify(results_list), 200

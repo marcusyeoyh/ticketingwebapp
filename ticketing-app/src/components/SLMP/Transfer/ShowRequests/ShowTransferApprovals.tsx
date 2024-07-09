@@ -12,6 +12,7 @@ type TransferApprovals = {
   ROID: string;
   EndorserID: string;
   ApproverID: string;
+  NewAssignee: string;
   Date: string;
 };
 
@@ -60,7 +61,7 @@ const ShowTransferApprovals: React.FC<ShowTransferApprovalsProps> = ({
   }
 
   const handleClick = (id: number) => {
-    navigate(`/approve-request/${id}`);
+    navigate(`/approve-transfer-request/${id}`);
   };
 
   return (
@@ -83,6 +84,9 @@ const ShowTransferApprovals: React.FC<ShowTransferApprovalsProps> = ({
                 Approver
               </th>
               <th scope="col" style={{ width: "200px" }}>
+                New Assignee
+              </th>
+              <th scope="col" style={{ width: "200px" }}>
                 Date Requested
               </th>
               <th scope="col" style={{ width: "200px" }}>
@@ -97,6 +101,7 @@ const ShowTransferApprovals: React.FC<ShowTransferApprovalsProps> = ({
                 <td>{request.ROID}</td>
                 <td>{request.EndorserID}</td>
                 <td>{request.ApproverID}</td>
+                <td>{request.NewAssignee}</td>
                 <td>{request.Date}</td>
                 <td>
                   <button

@@ -23,12 +23,12 @@ const PendingApproval: React.FC<PendingApprovalProp> = ({
   }, [installCount, transferCount]);
 
   return (
-    <>
+    <div>
       <ShowSLMPApprovals onApprovalCountChange={handleInstallCountChange} />
       <ShowTransferApprovals
         onApprovalCountChange={handleTransferCountChange}
       />
-    </>
+    </div>
   );
 };
 

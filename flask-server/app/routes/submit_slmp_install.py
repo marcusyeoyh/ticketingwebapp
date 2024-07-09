@@ -29,49 +29,53 @@ def submitsection1():
         connection = sqlite3.connect(db_path)
         cursor = connection.cursor()
 
+        cursor.execute('''
+            INSERT INTO "SLMPRequests" (RequestType, CreatedAt, ROID) VALUES (?, ?, ?)
+        ''', ('Install', form_data['Date'], form_data['ROID']))
+        unique_request_id = cursor.lastrowid
+
         query = '''
             INSERT INTO "SLMPInstall" (
-                ROID, DivisionProgram, Date, Outside, EndorserID, ApproverID, 
+                id, ROID, DivisionProgram, Date, Outside, EndorserID, ApproverID, 
                 SoftwareAssignee, MachineCATNumber, MachineName, SoftwareName, 
                 VersionNumber, SoftwareInvenNumber, LicenseType, LicensingScheme, 
                 LicenseValidity, AdditionalInfo, Remarks, FilePath
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         '''
         cursor.execute(query, (
-            form_data['ROID'], form_data['DivisionProgram'], form_data['Date'], form_data['Outside'],
+            unique_request_id, form_data['ROID'], form_data['DivisionProgram'], form_data['Date'], form_data['Outside'],
             form_data['EndorserID'], form_data['ApproverID'], form_data['SoftwareAssignee'], 
             form_data['MachineCATNumber'], form_data['MachineName'], form_data['SoftwareName'], 
             form_data['VersionNumber'], form_data['SoftwareInvenNumber'], form_data['LicenseType'], 
             form_data['LicensingScheme'], form_data['LicenseValidity'], form_data['AdditionalInfo'], 
             form_data['Remarks'], form_data['file_path']
         ))
-        form_submission_id = cursor.lastrowid
 
         query2 = '''
             INSERT INTO "SLMPInstallStatus" (
-                id, Approved, Endorsed, Accepted
-            ) VALUES (?, ?, ?, ?)
+                id, Approved, Endorsed
+            ) VALUES (?, ?, ?)
         '''
-        cursor.execute(query2, (form_submission_id, 0, 0, 0))
+        cursor.execute(query2, (unique_request_id, 0, 0))
 
         query3 = '''
             INSERT INTO "SLMPInstallEndorse" (
                 id
             ) VALUES (?)
         '''
-        cursor.execute(query3, (form_submission_id,))
+        cursor.execute(query3, (unique_request_id,))
 
         query4 = '''
             INSERT INTO "SLMPInstallApprove" (
                 id
             ) VALUES (?)
         '''
-        cursor.execute(query4, (form_submission_id,))
+        cursor.execute(query4, (unique_request_id,))
 
         connection.commit()
         cursor.close()
         connection.close()
-        return jsonify({"message": "Form submitted successfully", "Request ID": form_submission_id}), 200
+        return jsonify({"message": "Form submitted successfully", "Request ID": unique_request_id}), 200
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
     except Exception as e:
@@ -283,7 +287,7 @@ def rejectsection3():
 def amendform():
     try:
         form_data = request.form.to_dict()
-        file = request.files.get('fileUpload')
+        file = request.files.get('FileUpload')
 
         if file:
             specialFilepath = f"{form_data["ROID"]}_{int(time.time())}_{file.filename}"

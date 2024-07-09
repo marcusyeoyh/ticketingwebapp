@@ -57,7 +57,7 @@ const ShowAllReq = () => {
 
   return (
     <div style={{ margin: "1rem" }}>
-      <h4>Your Pending SLMP Install Requests:</h4>
+      <h4>Your SLMP Install Request History:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
           <thead>
@@ -89,7 +89,7 @@ const ShowAllReq = () => {
           </tbody>
         </table>
       ) : (
-        <p>No pending requests.</p>
+        <p>No prior requests.</p>
       )}
     </div>
   );
