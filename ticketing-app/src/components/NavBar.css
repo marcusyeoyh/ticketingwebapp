@@ -36,6 +36,10 @@
   margin-right: 0.5rem;
 }
 
+.navbar-custom .nav-link.admin-viewall {
+  margin-right: 1rem;
+}
+
 .navbar-custom .nav-link .bi-person-circle {
   margin-right: 0.5rem;
 }

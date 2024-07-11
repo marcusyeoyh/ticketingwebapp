@@ -54,14 +54,26 @@ const NavBar = () => {
               </a>
             </li>
           </div>
-          <NavLink
-            className="nav-link d-flex"
-            activeClassName="active"
-            to="/profile"
-          >
-            <i className="bi bi-person-circle"></i>
-            <div>{fullName}</div>
-          </NavLink>
+          <div className="d-flex">
+            {user?.user_role == "Administrators" && (
+              <NavLink
+                exact="true"
+                className="nav-link admin-viewall"
+                activeClassName="active"
+                to="/viewallreq"
+              >
+                View All Requests
+              </NavLink>
+            )}
+            <NavLink
+              className="nav-link d-flex"
+              activeClassName="active"
+              to="/profile"
+            >
+              <i className="bi bi-person-circle"></i>
+              <div>{fullName}</div>
+            </NavLink>
+          </div>
         </div>
       </div>
     </nav>

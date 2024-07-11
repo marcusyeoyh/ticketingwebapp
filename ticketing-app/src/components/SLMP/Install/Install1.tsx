@@ -15,6 +15,7 @@ const Install1: React.FC = () => {
   const curDate = formatDate(new Date());
   const [formData, setFormData] = useState({
     ROID: user?.username || "",
+    FullName: user?.full_name || "",
     DivisionProgram: "",
     Date: curDate || "",
     Outside: "",
@@ -83,8 +84,8 @@ const Install1: React.FC = () => {
         <input
           className="form-control"
           id="ROName"
-          name="ROID"
-          value={formData.ROID}
+          name="FullName"
+          value={formData.FullName}
           onChange={handleChange}
           disabled
         />

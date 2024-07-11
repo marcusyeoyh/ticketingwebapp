@@ -26,6 +26,7 @@ import FormTransferAccept from "./pages/SLMP-requests/Transfer/FormTransferAccep
 import ViewDeleteRequest from "./pages/SLMP-requests/Delete/ViewDeleteRequest";
 import EndorseDeleteRequest from "./pages/SLMP-requests/Delete/EndorseDeleteRequest";
 import FormDeleteAmend from "./pages/SLMP-requests/Delete/FormDeleteAmend";
+import AdminViewAll from "./pages/AdminViewAll";
 
 const AppRoutes = () => {
   return (
@@ -48,7 +49,11 @@ const AppRoutes = () => {
         element={
           <VerifyRole
             element={<EndorseRequest />}
-            requiredRole={["Endorsing Officer", "Approving Officer"]}
+            requiredRole={[
+              "Endorsing Officer",
+              "Approving Officer",
+              "Administrators",
+            ]}
           />
         }
       />
@@ -57,7 +62,7 @@ const AppRoutes = () => {
         element={
           <VerifyRole
             element={<ApproveRequests />}
-            requiredRole={["Approving Officer"]}
+            requiredRole={["Approving Officer", "Administrators"]}
           />
         }
       />
@@ -74,7 +79,11 @@ const AppRoutes = () => {
         element={
           <VerifyRole
             element={<EndorseTransferRequest />}
-            requiredRole={["Endorsing Officer", "Approving Officer"]}
+            requiredRole={[
+              "Endorsing Officer",
+              "Approving Officer",
+              "Administrators",
+            ]}
           />
         }
       />
@@ -83,7 +92,7 @@ const AppRoutes = () => {
         element={
           <VerifyRole
             element={<ApproveTransferRequests />}
-            requiredRole={["Approving Officer"]}
+            requiredRole={["Approving Officer", "Administrators"]}
           />
         }
       />
@@ -100,13 +109,26 @@ const AppRoutes = () => {
         element={
           <VerifyRole
             element={<EndorseDeleteRequest />}
-            requiredRole={["Endorsing Officer", "Approving Officer"]}
+            requiredRole={[
+              "Endorsing Officer",
+              "Approving Officer",
+              "Administrators",
+            ]}
           />
         }
       />
       <Route
         path="/amend-delete-request/:id"
         element={<VerifyID element={<FormDeleteAmend />} />}
+      />
+      <Route
+        path="/viewallreq"
+        element={
+          <VerifyRole
+            element={<AdminViewAll />}
+            requiredRole={["Administrators"]}
+          />
+        }
       />
     </Routes>
   );

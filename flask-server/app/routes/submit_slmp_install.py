@@ -36,14 +36,14 @@ def submitsection1():
 
         query = '''
             INSERT INTO "SLMPInstall" (
-                id, ROID, DivisionProgram, Date, Outside, EndorserID, ApproverID, 
+                id, ROID, FullName, DivisionProgram, Date, Outside, EndorserID, ApproverID, 
                 SoftwareAssignee, MachineCATNumber, MachineName, SoftwareName, 
                 VersionNumber, SoftwareInvenNumber, LicenseType, LicensingScheme, 
                 LicenseValidity, AdditionalInfo, Remarks, FilePath
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         '''
         cursor.execute(query, (
-            unique_request_id, form_data['ROID'], form_data['DivisionProgram'], form_data['Date'], form_data['Outside'],
+            unique_request_id, form_data['ROID'], form_data['FullName'], form_data['DivisionProgram'], form_data['Date'], form_data['Outside'],
             form_data['EndorserID'], form_data['ApproverID'], form_data['SoftwareAssignee'], 
             form_data['MachineCATNumber'], form_data['MachineName'], form_data['SoftwareName'], 
             form_data['VersionNumber'], form_data['SoftwareInvenNumber'], form_data['LicenseType'], 
@@ -313,6 +313,7 @@ def amendform():
         query = '''
             UPDATE "SLMPInstall" SET
                 ROID = ?,
+                FullName = ?,
                 DivisionProgram = ?,
                 Date = ?,
                 Outside = ?,
@@ -333,7 +334,7 @@ def amendform():
             WHERE id = ?
         '''
         cursor.execute(query, (
-            form_data['ROID'], form_data['DivisionProgram'], form_data['Date'], form_data['Outside'],
+            form_data['ROID'], form_data['FullName'], form_data['DivisionProgram'], form_data['Date'], form_data['Outside'],
             form_data['EndorserID'], form_data['ApproverID'], form_data['SoftwareAssignee'], 
             form_data['MachineCATNumber'], form_data['MachineName'], form_data['SoftwareName'], 
             form_data['VersionNumber'], form_data['SoftwareInvenNumber'], form_data['LicenseType'], 

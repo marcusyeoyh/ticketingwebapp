@@ -1,6 +1,8 @@
-from flask import Blueprint, request, jsonify, send_file
+from flask import Blueprint, request, jsonify, Response
 import sqlite3
 import os
+import csv
+from io import StringIO
 
 slmp_transfer = Blueprint('slmpTransfer', __name__)
 
@@ -10,8 +12,6 @@ def findDBPath(db_name):
 @slmp_transfer.route('/find-all', methods=['GET'])
 def find_slmp_transfer():
     user = request.args.get('user')
-    if not user:
-        return jsonify({'error': 'User is required'}), 400
 
     try:
         db_path = findDBPath("SLMP.db")
@@ -19,10 +19,10 @@ def find_slmp_transfer():
         cursor = connection.cursor()
 
         query = '''
-            SELECT t1.id AS RequestID, t2.Approved, t2.Endorsed, t2.Accepted, t1.Date
+            SELECT t1.id AS RequestID, t2.Approved, t2.Endorsed, t2.Accepted, t1.Date, t1.FullName
             FROM SLMPTransfer t1
             INNER JOIN SLMPTransferStatus t2 ON t1.id = t2.id
-            WHERE t1.ROID = ?    
+            WHERE t1.ROID = COALESCE(?, t1.ROID)    
         '''
         
         cursor.execute(query, (user,))
@@ -39,7 +39,8 @@ def find_slmp_transfer():
                 "Endorsed": endorsed_status,
                 "Approved": approved_status,
                 "Accepted": accept_status,
-                "Date": row[4]
+                "Date": row[4],
+                "FullName": row[5]
             }) 
         
         connection.close()
@@ -378,5 +379,67 @@ def findnewassignee():
         connection.close()
         return jsonify(results_list), 200
     
+    except sqlite3.Error as e:
+        return jsonify({"message": "Database error occurred", "error": str(e)}), 500
+    
+@slmp_transfer.route('/downloadCSV', methods=['GET'])
+def downloadcsv():
+    try:
+        db_path = findDBPath("SLMP.db")
+        connection = sqlite3.connect(db_path)
+        cursor = connection.cursor()
+
+        query = '''
+        SELECT *
+        FROM SLMPTransfer t1
+        INNER JOIN SLMPTransferStatus t2 ON t1.id = t2.id
+        INNER JOIN SLMPTransferEndorse t3 ON t1.id = t3.id
+        INNER JOIN SLMPTransferApprove t4 ON t1.id = t4.id
+        INNER JOIN SLMPTransferAccept t5 on t1.id = t5.id
+        '''
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        si = StringIO()
+        cw = csv.writer(si)
+
+        cw.writerow([
+            "ROID", "FullName", "DivisionProgram", "Date", "EndorserID", "ApproverID", "CurrentAssignee",
+            "CurrentCATNumber", "CurrentMachineName", "NewAssignee", "NewCATNumber", "NewMachineName",
+            "SoftwareName", "VersionNumber", "SoftwareInvenNumber", "LicenseType", "LicensingScheme",
+            "LicenseValidity", "FileLink", "AdditionalInfo", "Remarks", "Approved", "Endorsed", 
+            "Accepted", "EndorseFullName", "EndorseDate", "EndorseDivisionProgram", "EndorseVerification",
+            "EndorseSupported", "EndorseUninstalled", "EndorseTrackingUpdated", "EndorseVSPUpdated",
+            "EndorseAdditionalInfo", "EndorseRemarks", "EndorseAttachment", "ApproveFullName",
+            "ApproveDivisionProgram", "ApproveRemarks", "ApproveDate", "AcceptFullName", 
+            "AcceptDivisionProgram", "AcceptDate", "AcceptRemarks"
+        ])
+
+        for row in results:
+            additionalinfo = "NIL" if not row[19] else row[19]
+            remarks = "NIL" if not row[20] else row[20]
+            endorsedstatus = "Endorsed" if row[23] == 1 else "Pending" if row[23] == 0 else "Rejected"
+            approvalstatus = "Approved" if row[24] == 1 else "Pending" if row[24] == 0 else "Rejected"
+            acceptstatus = "Accepted" if row[25] == 1 else "Pending" if row[25] == 0 else "Rejected"
+            endorseadditionalinfo = "NIL" if not row[35] else row[35]
+            endorseremarks = "NIL" if not row[36] else row[36]
+            approveremarks = "NIL" if not row[41] else row[41]
+
+            cw.writerow([
+                row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9],
+                row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17],
+                row[18], row[21], additionalinfo, remarks, approvalstatus, endorsedstatus,
+                acceptstatus, row[27], row[28], row[29], row[30], row[31], row[32], row[33],
+                row[34], endorseadditionalinfo, endorseremarks, row[37], row[39], row[40],
+                approveremarks, row[42], row[44], row[45], row[46], row[47]
+            ])
+        connection.close()
+        output= si.getvalue()
+        return Response(
+            output,
+            mimetype="text/csv",
+            headers={"Content-Disposition": "attachment; filename=slmp_transfer_data.csv"}
+        )
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500

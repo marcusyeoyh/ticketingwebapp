@@ -8,6 +8,7 @@ import ShowSection3 from "../../components/SLMP/Install/Section 3/ShowSection3";
 
 type FormStatus = {
   ROID: string;
+  FullName: string;
   DivisionProgram: string;
   Date: string;
   Outside: string;
@@ -37,6 +38,7 @@ const FormAmend = () => {
   const [error, setError] = useState<Error | null>(null);
   const [newData, setNewData] = useState({
     ROID: "",
+    FullName: "",
     DivisionProgram: "",
     Date: "",
     Outside: "",
@@ -78,6 +80,7 @@ const FormAmend = () => {
     if (data && id) {
       setNewData({
         ROID: data.ROID || "",
+        FullName: data.FullName || "",
         DivisionProgram: data.DivisionProgram || "",
         Date: data.Date || "",
         Outside: data.Outside || "",
@@ -155,8 +158,8 @@ const FormAmend = () => {
             <input
               className="form-control"
               id="ROName"
-              name="ROID"
-              value={newData.ROID}
+              name="FullName"
+              value={newData.FullName}
               onChange={handleChange}
               disabled
             />

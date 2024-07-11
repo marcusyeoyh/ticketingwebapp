@@ -1,6 +1,8 @@
-from flask import Blueprint, request, jsonify, send_file
+from flask import Blueprint, request, jsonify, Response
 import sqlite3
 import os
+import csv
+from io import StringIO
 
 slmp_delete = Blueprint('slmpDelete', __name__)
 
@@ -10,8 +12,6 @@ def findDBPath(db_name):
 @slmp_delete.route('/find-all', methods=['GET'])
 def find_slmp_install():
     user = request.args.get('user')
-    if not user:
-        return jsonify({'error': 'User is required'}), 400
 
     try:
         db_path = findDBPath("SLMP.db")
@@ -19,10 +19,10 @@ def find_slmp_install():
         cursor = connection.cursor()
 
         query = '''
-            SELECT t1.id AS RequestID, t2.Endorsed, t1.Date
+            SELECT t1.id AS RequestID, t2.Endorsed, t1.Date, t1.FullName
             FROM SLMPDelete t1
             INNER JOIN SLMPDeleteStatus t2 ON t1.id = t2.id
-            WHERE t1.ROID = ?    
+            WHERE t1.ROID = COALESCE(?,t1.ROID)    
         '''
         
         cursor.execute(query, (user,))
@@ -35,7 +35,8 @@ def find_slmp_install():
             results_list.append({
                 "RequestID": row[0],
                 "Endorsed": endorsed_status,
-                "Date": row[2]
+                "Date": row[2],
+                "FullName": row[3]
             }) 
         
         connection.close()
@@ -212,5 +213,59 @@ def findslmprejections():
             })
         connection.close()
         return jsonify(results_list), 200
+    except sqlite3.Error as e:
+        return jsonify({"message": "Database error occurred", "error": str(e)}), 500
+
+@slmp_delete.route('/downloadCSV', methods=['GET'])
+def downloadcsv():
+    try:
+        db_path = findDBPath("SLMP.db")
+        connection = sqlite3.connect(db_path)
+        cursor = connection.cursor()
+
+        query = '''
+        SELECT *
+        FROM SLMPDelete t1
+        INNER JOIN SLMPDeleteStatus t2 ON t1.id = t2.id
+        INNER JOIN SLMPDeleteEndorse t3 ON t1.id = t3.id
+        '''
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        si = StringIO()
+        cw = csv.writer(si)
+
+        cw.writerow([
+            "ROID", "FullName", "DivisionProgram", "Date", "RemovalReason",
+            "EndorserID", "SoftwareAssignee", "MachineCATNumber", "MachineName",
+            "SoftwareName", "VersionNumber", "SoftwareInvenNumber", "LicenseType",
+            "LicensingScheme", "LicenseValidity", "AdditionalInfo", "Remarks",
+            "FilePath", "Endorsed", "EndorseFullName", "EndorseDate", "EndorseDivisionProgram",
+            "EndorseVerification", "EndorseSupported", "EndorseUninstalled",
+            "EndorseTracking", "EndorseAdditionalInfo", "EndorseRemarks",
+            "EndorseAttachment"
+        ])
+
+        for row in results:
+            additionalinfo = "NIL" if not row[16] else row[16]
+            remarks = "NIL" if not row[17] else row[17]
+            endorsedstatus = "Endorsed" if row[20] == 1 else "Pending" if row[20] == 0 else "Rejected"
+            endorseadditionalinfo = "NIL" if not row[29] else row[29]
+            endorseremarks = "NIL" if not row[30] else row[30]
+
+            cw.writerow([
+                row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10],
+                row[11], row[12], row[13], row[14], row[15], additionalinfo, remarks, row[18],
+                endorsedstatus, row[22], row[23], row[24], row[25], row[26], row[27], row[28],
+                endorseadditionalinfo, endorseremarks, row[31]
+            ])
+        connection.close()
+        output= si.getvalue()
+        return Response(
+            output,
+            mimetype="text/csv",
+            headers={"Content-Disposition": "attachment; filename=slmp_install_data.csv"}
+        )
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500

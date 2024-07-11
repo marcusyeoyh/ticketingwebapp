@@ -20,7 +20,7 @@ export const submitForm = async (endpoint: string, formData: any) => {
   }
 };
 
-export const findRequests = async (endpoint: string, user: string) => {
+export const findRequests = async (endpoint: string, user: string | null) => {
   try {
     const response = await axios.get(`${apiUrl}${endpoint}`, {
       params: { user: user },
@@ -100,5 +100,26 @@ export const downloadFile = async (filePath: string) => {
     link.remove();
   } catch (error) {
     console.error("Error downloading file:", error);
+  }
+};
+
+export const downloadCSV = async (endpoint: string, type: string) => {
+  try {
+    const response = await axios.get(`${apiUrl}${endpoint}`, {
+      withCredentials: true,
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(response.data);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = `slmp_${type}_data.csv`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
   }
 };

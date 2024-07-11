@@ -55,8 +55,9 @@ const processData = (rawData: any): UserInfo => {
     : rawData.member_of.split(",")[0].split("=")[1];
 
   let userRole = "NIL";
-
-  if (memberOf.includes("Approving Officers")) {
+  if (memberOf.includes("Administrators")) {
+    userRole = "Administrators";
+  } else if (memberOf.includes("Approving Officers")) {
     userRole = "Approving Officer";
   } else if (memberOf.includes("Endorsing Officers")) {
     userRole = "Endorsing Officer";
