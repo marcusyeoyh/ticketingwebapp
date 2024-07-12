@@ -66,6 +66,12 @@ const ShowSLMPDelete: React.FC<ShowSLMPDeleteProps> = ({
       <h4>Your Pending SLMP Delete Requests:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
+          <colgroup>
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "52%" }} />
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "10%" }} />
+          </colgroup>
           <thead>
             <tr>
               <th scope="col">Request ID</th>

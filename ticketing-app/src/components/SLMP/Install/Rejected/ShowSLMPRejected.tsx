@@ -67,6 +67,14 @@ const ShowSLMPRejected: React.FC<ShowSLMPRejectedProps> = ({
       <h4>SLMP Install Requests:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
+          <colgroup>
+            <col style={{ width: "15%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "28%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "15%" }} />
+          </colgroup>
           <thead>
             <tr>
               <th scope="col">Request ID</th>

@@ -68,26 +68,22 @@ const ShowSLMPApprovals: React.FC<ShowSLMPApprovalsProps> = ({
       <h4>Pending SLMP Install Requests:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
+          <colgroup>
+            <col style={{ width: "15%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "28%" }} />
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "15%" }} />
+          </colgroup>
           <thead>
             <tr>
-              <th scope="col" style={{ width: "200px" }}>
-                Request ID
-              </th>
-              <th scope="col" style={{ width: "200px" }}>
-                ROID
-              </th>
-              <th scope="col" style={{ width: "200px" }}>
-                Endorser
-              </th>
-              <th scope="col" style={{ width: "200px" }}>
-                Approver
-              </th>
-              <th scope="col" style={{ width: "200px" }}>
-                Date Requested
-              </th>
-              <th scope="col" style={{ width: "200px" }}>
-                Further Actions
-              </th>
+              <th scope="col">Request ID</th>
+              <th scope="col">ROID</th>
+              <th scope="col">Endorser</th>
+              <th scope="col">Approver</th>
+              <th scope="col">Date Requested</th>
+              <th scope="col">Further Actions</th>
             </tr>
           </thead>
           <tbody>

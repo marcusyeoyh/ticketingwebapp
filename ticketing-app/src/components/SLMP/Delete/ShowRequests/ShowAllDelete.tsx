@@ -59,6 +59,12 @@ const ShowAllDelete = () => {
       <h4>Your SLMP Remove Request History:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
+          <colgroup>
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "52%" }} />
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "10%" }} />
+          </colgroup>
           <thead>
             <tr>
               <th scope="col">Request ID</th>
