@@ -1,6 +1,7 @@
 import React from "react";
 import "./ProcessSelect.css";
 import { NavLink } from "react-router-dom";
+import TestBed from "./TestBed";
 
 const ProcessSelect = () => {
   return (
@@ -66,6 +67,12 @@ const ProcessSelect = () => {
           </div>
           <p className="mb-1">Give us some feedback!</p>
         </div>
+      </a>
+      <a
+        href="#"
+        className="list-group-item list-group-item-action list-group-item-custom"
+      >
+        <TestBed />
       </a>
     </div>
   );

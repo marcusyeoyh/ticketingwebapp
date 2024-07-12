@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const apiUrl = "http://168.10.10.1:5000";
 
@@ -121,5 +121,41 @@ export const downloadCSV = async (endpoint: string, type: string) => {
   } catch (error) {
     console.error("Error:", error);
     throw error;
+  }
+};
+
+export const getUsers = async (group: string) => {
+  try {
+    const response = await axios.get(`${apiUrl}/api/user/getgroupusers`, {
+      params: { group: group },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error(
+          "Server responded with error:",
+          axiosError.response.status,
+          axiosError.response.data
+        );
+        if (axiosError.response.status === 404) {
+          throw new Error("Users not found or group does not exist");
+        }
+      } else if (axiosError.request) {
+        // The request was made but no response was received
+        console.error("No response received:", axiosError.request);
+        throw new Error("No response received from server");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error setting up request:", axiosError.message);
+        throw new Error("Error setting up request");
+      }
+    }
+    console.error("Unexpected error:", error);
+    throw new Error("An unexpected error occurred");
   }
 };

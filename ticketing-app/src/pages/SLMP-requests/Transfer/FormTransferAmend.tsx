@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../../../components/NavBar";
 import { useNavigate, useParams } from "react-router-dom";
-import { findSec1Info, submitForm } from "../../../components/API";
+import { findSec1Info, getUsers, submitForm } from "../../../components/API";
 import ShowTransferSection1 from "../../../components/SLMP/Transfer/Section 1/ShowTransferSection1";
 import ShowTransferSection2 from "../../../components/SLMP/Transfer/Section 2/ShowTransferSection2";
 import ShowTransferSection3 from "../../../components/SLMP/Transfer/Section 3/ShowTransferSection3";
@@ -32,6 +32,11 @@ type FormStatus = {
   Endorsed: string;
   Approved: string;
   Accepted: string;
+};
+
+type UserInfo = {
+  full_name: string;
+  username: string;
 };
 
 const FormTransferAmend = () => {
@@ -65,6 +70,34 @@ const FormTransferAmend = () => {
     id: "",
     FilePath: "",
   });
+
+  const [endorsingOfficers, setEndorsingOfficers] = useState<UserInfo[] | null>(
+    null
+  );
+  const [eoLoading, setEOLoading] = useState(true);
+  const [eoError, setEOError] = useState<Error | null>(null);
+  const [eoSearchTerm, setEOSearchTerm] = useState("");
+  const [filteredEO, setFilteredEO] = useState<UserInfo[]>([]);
+  const [showEODropdown, setShowEODropdown] = useState(false);
+  const [noEOAlert, setNoEOAlert] = useState(false);
+
+  const [approvingOfficers, setApprovingOfficers] = useState<UserInfo[] | null>(
+    null
+  );
+  const [aoLoading, setAOLoading] = useState(true);
+  const [aoError, setAOError] = useState<Error | null>(null);
+  const [aoSearchTerm, setAOSearchTerm] = useState("");
+  const [filteredAO, setFilteredAO] = useState<UserInfo[]>([]);
+  const [showAODropdown, setShowAODropdown] = useState(false);
+  const [noAOAlert, setNoAOAlert] = useState(false);
+
+  const [recipients, setRecipients] = useState<UserInfo[] | null>(null);
+  const [rLoading, setRLoading] = useState(true);
+  const [rError, setRError] = useState<Error | null>(null);
+  const [searchRTerm, setSearchRTerm] = useState("");
+  const [filteredR, setFilteredR] = useState<UserInfo[]>([]);
+  const [showRDropdown, setShowRDropdown] = useState(false);
+  const [noRAlert, setNoRAlert] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,11 +145,80 @@ const FormTransferAmend = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    if (newData) {
+      setSearchRTerm(newData.NewAssignee);
+      setEOSearchTerm(newData.EndorserID);
+      setAOSearchTerm(newData.ApproverID);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const fetchEOData = async () => {
+      try {
+        const data = await getUsers("Endorsing Officers");
+        setEndorsingOfficers(data);
+      } catch (error) {
+        setEOError(error as Error);
+      } finally {
+        setEOLoading(false);
+      }
+    };
+    fetchEOData();
+  }, []);
+
+  useEffect(() => {
+    const fetchAOData = async () => {
+      try {
+        const data = await getUsers("Approving Officers");
+        setApprovingOfficers(data);
+      } catch (error) {
+        setAOError(error as Error);
+      } finally {
+        setAOLoading(false);
+      }
+    };
+    fetchAOData();
+  }, []);
+
+  useEffect(() => {
+    const fetchRData = async () => {
+      try {
+        const data = await getUsers("Remote Desktop Users");
+        setRecipients(data);
+      } catch (error) {
+        setRError(error as Error);
+      } finally {
+        setRLoading(false);
+      }
+    };
+    fetchRData();
+  }, []);
+
   if (loading) {
     return <div>Loading Request Information...</div>;
   }
   if (error) {
     return <div>Error: {error.message}</div>;
+  }
+
+  if (eoLoading) {
+    return <div>Loading...</div>;
+  }
+  if (eoError) {
+    return <div>Error {eoError.message}</div>;
+  }
+  if (aoLoading) {
+    return <div>Loading...</div>;
+  }
+  if (aoError) {
+    return <div>Error {aoError.message}</div>;
+  }
+  if (rLoading) {
+    return <div>Loading...</div>;
+  }
+  if (rError) {
+    return <div>Error {rError.message}</div>;
   }
 
   const handleChange = (
@@ -134,6 +236,18 @@ const FormTransferAmend = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (newData.ApproverID == "") {
+      setNoAOAlert(true);
+      return;
+    }
+    if (newData.EndorserID == "") {
+      setNoEOAlert(true);
+      return;
+    }
+    if (newData.NewAssignee == "") {
+      setNoRAlert(true);
+      return;
+    }
     try {
       const data = await submitForm("/submitslmp/transfer/amend", newData);
       console.log("Form amended successfully:", data["Request ID"]);
@@ -143,6 +257,58 @@ const FormTransferAmend = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+  };
+
+  const handleSearch = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setSearchTerm: React.Dispatch<React.SetStateAction<string>>,
+    officers: UserInfo[] | null,
+    setFilteredOfficers: React.Dispatch<React.SetStateAction<UserInfo[]>>,
+    field: "EndorserID" | "ApproverID" | "NewAssignee"
+  ) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (value.trim() === "") {
+      setFilteredOfficers([]);
+    } else if (officers) {
+      const filtered = officers.filter((officer) =>
+        officer.full_name.toLowerCase().includes(value.toLowerCase())
+      );
+      if (filtered.length == 0) {
+        setNewData((prevData) => ({
+          ...prevData,
+          [field]: "",
+        }));
+      }
+      setFilteredOfficers(filtered);
+    }
+  };
+
+  const handleSelect = (
+    field: "EndorserID" | "ApproverID" | "NewAssignee",
+    officer: UserInfo,
+    setSearchTerm: React.Dispatch<React.SetStateAction<string>>,
+    setFilteredOfficers: React.Dispatch<React.SetStateAction<UserInfo[]>>,
+    setShowDropdown: React.Dispatch<React.SetStateAction<boolean>>,
+    setAlert: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    setNewData((prevData) => ({
+      ...prevData,
+      [field]: officer.username,
+    }));
+    setSearchTerm(officer.full_name);
+    setFilteredOfficers([]);
+    setShowDropdown(false);
+    setAlert(false);
+  };
+
+  const clickAway = (
+    setShowDropdown: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    setTimeout(() => {
+      setShowDropdown(false);
+    }, 400);
   };
 
   if (id) {
@@ -206,41 +372,109 @@ const FormTransferAmend = () => {
             <label htmlFor="EndorsingOfficer" className="form-label">
               Endorsing Officer (EO): *
             </label>
-            <select
-              id="EndorsingOfficer"
-              className="form-select"
-              name="EndorserID"
-              value={newData.EndorserID}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled>
-                Select...
-              </option>
-              <option value="ericong">Eric Ong</option>
-              <option value="EO2">EO2</option>
-              <option value="Administrator">EO3</option>
-            </select>
+            {noEOAlert && (
+              <div style={{ color: "red" }}>
+                A valid Endorsing Officer must be chosen!
+              </div>
+            )}
+            <div className="position-relative">
+              <input
+                type="text"
+                id="EndorsingOfficer"
+                className="form-control"
+                value={eoSearchTerm}
+                onChange={(e) =>
+                  handleSearch(
+                    e,
+                    setEOSearchTerm,
+                    endorsingOfficers,
+                    setFilteredEO,
+                    "EndorserID"
+                  )
+                }
+                onFocus={() => setShowEODropdown(true)}
+                onBlur={(e) => clickAway(setShowEODropdown)}
+                placeholder="Search for an Endorsing Officer"
+                required
+              />
+              {showEODropdown && (
+                <ul className="list-group position-absolute w-100 mt-1 z-1000">
+                  {filteredEO &&
+                    filteredEO.slice(0, 4).map((eo) => (
+                      <li
+                        key={eo.username}
+                        className="list-group-item list-group-item-action"
+                        onClick={() =>
+                          handleSelect(
+                            "EndorserID",
+                            eo,
+                            setEOSearchTerm,
+                            setFilteredEO,
+                            setShowEODropdown,
+                            setNoEOAlert
+                          )
+                        }
+                      >
+                        {eo.full_name}
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
           </div>
           <div className="col-md-6">
             <label htmlFor="ApprovingOfficer" className="form-label">
               Approving Officer (AO): *
             </label>
-            <select
-              id="ApprovingOfficer"
-              className="form-select"
-              name="ApproverID"
-              value={newData.ApproverID}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled>
-                Select...
-              </option>
-              <option value="AO1">AO1</option>
-              <option value="AO2">AO2</option>
-              <option value="Administrator">AO3</option>
-            </select>
+            {noAOAlert && (
+              <div style={{ color: "red" }}>
+                A valid Approving Officer must be chosen!
+              </div>
+            )}
+            <div className="position-relative">
+              <input
+                type="text"
+                id="ApprovingOfficer"
+                className="form-control"
+                value={aoSearchTerm}
+                onChange={(e) =>
+                  handleSearch(
+                    e,
+                    setAOSearchTerm,
+                    approvingOfficers,
+                    setFilteredAO,
+                    "ApproverID"
+                  )
+                }
+                onFocus={() => setShowAODropdown(true)}
+                onBlur={() => clickAway(setShowAODropdown)}
+                placeholder="Search for an Approving Officer"
+                required
+              />
+              {showAODropdown && (
+                <ul className="list-group position-absolute w-100 mt-1 z-1000">
+                  {filteredAO &&
+                    filteredAO.slice(0, 4).map((ao) => (
+                      <li
+                        key={ao.username}
+                        className="list-group-item list-group-item-action"
+                        onClick={() =>
+                          handleSelect(
+                            "ApproverID",
+                            ao,
+                            setAOSearchTerm,
+                            setFilteredAO,
+                            setShowAODropdown,
+                            setNoAOAlert
+                          )
+                        }
+                      >
+                        {ao.full_name}
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
           </div>
           <div className="col-md-4">
             <label htmlFor="currentAssignee" className="form-label">
@@ -286,21 +520,50 @@ const FormTransferAmend = () => {
             <label htmlFor="newAssignee" className="form-label">
               New Assignee of software: *
             </label>
-            <select
-              id="newAssignee"
-              className="form-select"
-              name="NewAssignee"
-              value={newData.NewAssignee}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled>
-                Select...
-              </option>
-              <option value="test">test</option>
-              <option value="ericong">Eric Ong</option>
-              <option value="Administrator">Administrator</option>
-            </select>
+            <div className="position-relative">
+              <input
+                type="text"
+                id="newAssignee"
+                className="form-control"
+                value={searchRTerm}
+                onChange={(e) =>
+                  handleSearch(
+                    e,
+                    setSearchRTerm,
+                    recipients,
+                    setFilteredR,
+                    "NewAssignee"
+                  )
+                }
+                onFocus={() => setShowRDropdown(true)}
+                onBlur={() => clickAway(setShowRDropdown)}
+                placeholder="Search for an New Assignee"
+                required
+              />
+              {showRDropdown && (
+                <ul className="list-group position-absolute w-100 mt-1 z-1000">
+                  {filteredR &&
+                    filteredR.slice(0, 4).map((r) => (
+                      <li
+                        key={r.username}
+                        className="list-group-item list-group-item-action"
+                        onClick={() =>
+                          handleSelect(
+                            "NewAssignee",
+                            r,
+                            setSearchRTerm,
+                            setFilteredR,
+                            setShowRDropdown,
+                            setNoRAlert
+                          )
+                        }
+                      >
+                        {r.full_name}
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
           </div>
           <div className="col-md-4">
             <label htmlFor="newCATNumber" className="form-label">

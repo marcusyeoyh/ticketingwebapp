@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "../../../../UserContext";
 import { useNavigate } from "react-router-dom";
-import { submitForm } from "../../../API";
+import { getUsers, submitForm } from "../../../API";
 
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+};
+
+type UserInfo = {
+  full_name: string;
+  username: string;
 };
 
 const Delete1 = () => {
@@ -34,6 +39,16 @@ const Delete1 = () => {
     FileUpload: null,
   });
 
+  const [endorsingOfficers, setEndorsingOfficers] = useState<UserInfo[] | null>(
+    null
+  );
+  const [eoLoading, setEOLoading] = useState(true);
+  const [eoError, setEOError] = useState<Error | null>(null);
+  const [eoSearchTerm, setEOSearchTerm] = useState("");
+  const [showEODropdown, setShowEODropdown] = useState(false);
+  const [filteredEO, setFilteredEO] = useState<UserInfo[]>([]);
+  const [noEOAlert, setNoEOAlert] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +58,34 @@ const Delete1 = () => {
         ROID: user.username,
       }));
     }
+    if (user?.full_name) {
+      setFormData((prevData) => ({
+        ...prevData,
+        FullName: user.full_name,
+      }));
+    }
   }, [user]);
+
+  useEffect(() => {
+    const fetchEOData = async () => {
+      try {
+        const data = await getUsers("Endorsing Officers");
+        setEndorsingOfficers(data);
+      } catch (error) {
+        setEOError(error as Error);
+      } finally {
+        setEOLoading(false);
+      }
+    };
+    fetchEOData();
+  }, []);
+
+  if (eoLoading) {
+    return <div>Loading...</div>;
+  }
+  if (eoError) {
+    return <div>Error {eoError.message}</div>;
+  }
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -60,6 +102,10 @@ const Delete1 = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (formData.EndorserID == "") {
+      setNoEOAlert(true);
+      return;
+    }
     try {
       const data = await submitForm("/submitslmp/delete/section1", formData);
       console.log("Form submitted successfully:", data["Request ID"]);
@@ -69,6 +115,41 @@ const Delete1 = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+  };
+
+  const handleEOSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEOSearchTerm(value);
+
+    if (value.trim() === "") {
+      setFilteredEO([]);
+    } else if (endorsingOfficers) {
+      const filtered = endorsingOfficers.filter((eo) =>
+        eo.full_name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredEO(filtered);
+    }
+    if (filteredEO.length == 0) {
+      setFormData((prevData) => ({
+        ...prevData,
+        EndorserID: "",
+      }));
+    }
+  };
+
+  const handleEOSelect = (officer: UserInfo) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      EndorserID: officer.username,
+    }));
+    setEOSearchTerm(officer.full_name);
+    setFilteredEO([]);
+    setShowEODropdown(false);
+    setNoEOAlert(false);
+  };
+
+  const EOClickAway = () => {
+    setTimeout(() => setShowEODropdown(false), 200);
   };
 
   return (
@@ -135,21 +216,38 @@ const Delete1 = () => {
         <label htmlFor="EndorsingOfficer" className="form-label">
           Endorsing Officer (EO): *
         </label>
-        <select
-          id="EndorsingOfficer"
-          className="form-select"
-          name="EndorserID"
-          value={formData.EndorserID}
-          onChange={handleChange}
-          required
-        >
-          <option value="" disabled>
-            Select...
-          </option>
-          <option value="ericong">Eric Ong</option>
-          <option value="EO2">EO2</option>
-          <option value="Administrator">EO3</option>
-        </select>
+        {noEOAlert && (
+          <div style={{ color: "red" }}>
+            A valid Endorsing Officer must be chosen!
+          </div>
+        )}
+        <div className="position-relative">
+          <input
+            type="text"
+            id="EndorsingOfficer"
+            className="form-control"
+            value={eoSearchTerm}
+            onChange={handleEOSearch}
+            onFocus={() => setShowEODropdown(true)}
+            onBlur={() => EOClickAway()}
+            placeholder="Search for an Endorsing Officer"
+            required
+          />
+          {showEODropdown && (
+            <ul className="list-group position-absolute w-100 mt-1 z-1000">
+              {filteredEO &&
+                filteredEO.slice(0, 4).map((eo) => (
+                  <li
+                    key={eo.username}
+                    className="list-group-item list-group-item-action"
+                    onClick={() => handleEOSelect(eo)}
+                  >
+                    {eo.full_name}
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       <div className="col-md-4">
