@@ -265,3 +265,57 @@ def amendform():
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
     except Exception as e:
         return jsonify({"message": "Error processing form submission", "error": str(e)}), 500
+
+@submit_delete.route('/deleteReq', methods=['DELETE'])
+def deletereq():
+    try:
+        reqID = request.args.get('reqID')
+        
+        db_path = os.path.join("databases", "SLMP.db")
+        connection = sqlite3.connect(db_path)
+        cursor = connection.cursor()
+
+        query = '''
+            DELETE FROM "SLMPDelete"
+            WHERE id = ?
+        '''
+
+        cursor.execute(query, (
+            reqID,
+        ))
+
+        query2 = '''
+            DELETE FROM "SLMPDeleteStatus"
+            WHERE id = ?
+        '''
+        
+        cursor.execute(query2, (
+            reqID,
+        ))
+
+        query4 = '''
+            DELETE FROM "SLMPDeleteEndorse"
+            WHERE id = ?
+        '''
+        
+        cursor.execute(query4, (
+            reqID,
+        ))
+
+        query5 = '''
+            DELETE FROM "SLMPRequests"
+            WHERE id = ?
+        '''
+        
+        cursor.execute(query5, (
+            reqID,
+        ))
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return jsonify({"message": "Form deleted successfully", "Request ID": reqID}), 200
+    except sqlite3.Error as e:
+        return jsonify({"message": "Database error occurred", "error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"message": "Error processing form submission", "error": str(e)}), 500

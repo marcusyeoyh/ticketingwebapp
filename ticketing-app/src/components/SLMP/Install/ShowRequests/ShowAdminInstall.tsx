@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { downloadCSV, findRequests } from "../../../API";
-import "./ShowAdminInstall.css";
+import { deleteReq, downloadCSV, findRequests } from "../../../API";
 
 type AllReq = {
-  RequestID: number;
+  RequestID: string;
   FullName: string;
   Endorsed: string;
   Approved: string;
@@ -16,7 +15,7 @@ const ShowAdminInstall = () => {
   const [data, setData] = useState<AllReq[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [deletedItems, setDeletedItems] = useState<number[]>([]);
+  const [deletedItems, setDeletedItems] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +38,7 @@ const ShowAdminInstall = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  const handleClick = (id: number) => {
+  const handleClick = (id: string) => {
     navigate(`/view-request/${id}`);
   };
 
@@ -51,9 +50,9 @@ const ShowAdminInstall = () => {
     }
   };
 
-  const deleteClick = async (id: number) => {
+  const deleteClick = async (id: string) => {
     try {
-      // await deleteReq("/slmp/install/deleteReq", id);
+      await deleteReq("/submitslmp/install/deleteReq", id);
       setDeletedItems((prev) => [...prev, id]);
       setTimeout(() => {
         setData((prev) =>
@@ -78,6 +77,13 @@ const ShowAdminInstall = () => {
 
       {data && data.length > 0 ? (
         <table className="table table-striped">
+          <colgroup>
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+          </colgroup>
           <thead>
             <tr>
               <th scope="col">Request ID</th>
@@ -88,13 +94,12 @@ const ShowAdminInstall = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((request) => (
+            {data.map((request, index) => (
               <tr
-                key={request.RequestID}
+                key={index}
                 style={{ verticalAlign: "middle" }}
-                className={`table-row ${
-                  deletedItems.includes(request.RequestID) ? "fade-out" : ""
-                }`}
+                id={`row-${request.RequestID}`}
+                className="table-row"
               >
                 <th scope="row">{request.RequestID}</th>
                 <td>{request.FullName}</td>

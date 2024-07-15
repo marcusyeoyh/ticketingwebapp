@@ -46,3 +46,38 @@ def get_user_info(username):
         }
     except Exception as e:
         return None
+
+def get_users(userGroup):
+    try:
+        server = Server(LDAP_SERVER, get_info=ALL)
+        conn = Connection(server, user=LDAP_USER, password=LDAP_PASSWORD, authentication=NTLM)
+        if not conn.bind():
+            return None
+        
+        # Search for the relevant group
+        group_search_filter = f'(cn={userGroup})'
+        group_search_base = 'DC=sdc,DC=test'
+        conn.search(group_search_base, group_search_filter, attributes=['distinguishedName'])
+        if not conn.entries:
+            print(f"Group '{userGroup}' not found")
+            return None
+        
+        group_dn = conn.entries[0].distinguishedName.value
+        
+        # Search for users who are members of the specified group
+        user_search_filter = f'(&(objectClass=user)(memberOf={group_dn}))'
+        user_search_base = 'DC=sdc,DC=test'
+        conn.search(user_search_base, user_search_filter, attributes=['sAMAccountName', 'cn'])
+        
+        users = []
+        for entry in conn.entries:
+            user_info = {
+                'username': entry.sAMAccountName.value,
+                'full_name': entry.cn.value
+            }
+            users.append(user_info)
+        
+        return users
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None

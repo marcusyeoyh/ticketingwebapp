@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { downloadCSV, findRequests } from "../../../API";
+import { deleteReq, downloadCSV, findRequests } from "../../../API";
 
 type AllReq = {
-  RequestID: number;
+  RequestID: string;
   FullName: string;
   Endorsed: string;
   Date: string;
@@ -14,6 +14,7 @@ const ShowAdminDelete = () => {
   const [data, setData] = useState<AllReq[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [deletedItems, setDeletedItems] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +37,7 @@ const ShowAdminDelete = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  const handleClick = (id: number) => {
+  const handleClick = (id: string) => {
     navigate(`/view-delete-request/${id}`);
   };
 
@@ -45,6 +46,20 @@ const ShowAdminDelete = () => {
       await downloadCSV("/slmp/delete/downloadCSV", "delete");
     } catch (error) {
       console.error("Error downloading CSV:", error);
+    }
+  };
+
+  const deleteClick = async (id: string) => {
+    try {
+      await deleteReq("/submitslmp/delete/deleteReq", id);
+      setDeletedItems((prev) => [...prev, id]);
+      setTimeout(() => {
+        setData((prev) =>
+          prev ? prev.filter((item) => item.RequestID !== id) : null
+        );
+      }, 500);
+    } catch (error) {
+      console.error("Error deleting request:", error);
     }
   };
 
@@ -58,6 +73,13 @@ const ShowAdminDelete = () => {
       </div>
       {data && data.length > 0 ? (
         <table className="table table-striped">
+          <colgroup>
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+          </colgroup>
           <thead>
             <tr>
               <th scope="col">Request ID</th>
@@ -78,6 +100,14 @@ const ShowAdminDelete = () => {
                     onClick={() => handleClick(request.RequestID)}
                   >
                     More Information
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => deleteClick(request.RequestID)}
+                  >
+                    Delete Request
                   </button>
                 </td>
               </tr>

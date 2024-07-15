@@ -159,3 +159,19 @@ export const getUsers = async (group: string) => {
     throw new Error("An unexpected error occurred");
   }
 };
+
+export const deleteReq = async (endpoint: string, reqID: string) => {
+  try {
+    const response = await axios.delete(`${apiUrl}${endpoint}`, {
+      params: { reqID: reqID },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error finding requests",
+      error.response || error.message || error
+    );
+    throw error;
+  }
+};
