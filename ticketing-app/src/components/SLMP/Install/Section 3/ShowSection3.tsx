@@ -7,6 +7,7 @@ type Section3Data = {
   ApproveDivisionProgram: string;
   ApproveRemarks: string;
   ApproveDate: string;
+  ApproverID: string;
 };
 
 type ShowSection3Props = {
@@ -45,6 +46,9 @@ const ShowSection3: React.FC<ShowSection3Props> = ({ id }) => {
       <div className="d-flex justify-content-between align-items-center">
         <div>
           <h5>Section 3: Approval of Request for usage of software license</h5>
+          {sec3Data?.Approved == "Pending" && (
+            <div>Approver: {sec3Data.ApproverID}</div>
+          )}
           <p>Approve Status: {sec3Data?.Approved}</p>
         </div>
       </div>

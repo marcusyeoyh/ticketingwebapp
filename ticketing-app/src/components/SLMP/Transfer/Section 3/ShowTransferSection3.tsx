@@ -11,6 +11,7 @@ type Section3Data = {
   ApproveDivisionProgram: string;
   ApproveRemarks: string;
   ApproveDate: string;
+  ApproverID: string;
 };
 
 const ShowTransferSection3: React.FC<ShowTransferSection3Props> = ({ id }) => {
@@ -47,6 +48,9 @@ const ShowTransferSection3: React.FC<ShowTransferSection3Props> = ({ id }) => {
           <h5>
             Section 3: Approval of Request for transfer of software license
           </h5>
+          {sec3Data?.Approved == "Pending" && (
+            <div>Approver: {sec3Data.ApproverID}</div>
+          )}
           <p>Approve Status: {sec3Data?.Approved}</p>
         </div>
       </div>

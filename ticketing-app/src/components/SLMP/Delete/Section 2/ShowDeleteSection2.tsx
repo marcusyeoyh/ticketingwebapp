@@ -17,6 +17,7 @@ type Section2Data = {
   EndorseAdditionalInfo: string;
   EndorseRemarks: string;
   EndorseAttachment: string;
+  EndorserID: string;
 };
 
 const ShowDeleteSection2: React.FC<ShowDeleteSection2Props> = ({ id }) => {
@@ -61,6 +62,9 @@ const ShowDeleteSection2: React.FC<ShowDeleteSection2Props> = ({ id }) => {
           <h5>
             Section 2: Verification of Request for software license removal
           </h5>
+          {sec2Data?.Endorsed == "Pending" && (
+            <div>Endorser: {sec2Data.EndorserID}</div>
+          )}
           <p>Endorse Status: {sec2Data?.Endorsed}</p>
         </div>
 

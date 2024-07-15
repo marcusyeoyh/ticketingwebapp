@@ -8,3 +8,28 @@
   display: flex;
   align-items: center;
 }
+
+.card {
+  margin: 1rem;
+  width: 33%;
+}
+
+.card .card-body .header {
+  margin-bottom: 0.5rem;
+}
+
+.card .card-body .icon-large {
+  font-size: 2rem;
+  align-self: center;
+  margin-right: 0.5rem;
+}
+
+.card .card-body .bi {
+  font-size: 2rem;
+  align-self: center;
+  margin-right: 0.5rem;
+}
+
+.card .card-body .request {
+  margin: 2rem;
+}

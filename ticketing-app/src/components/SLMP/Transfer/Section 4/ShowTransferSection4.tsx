@@ -11,10 +11,11 @@ type Section4Data = {
   AcceptDivisionProgram: string;
   AcceptDate: string;
   AcceptRemarks: string;
+  NewAssignee: string;
 };
 
 const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
-  const [sec3Data, setSec3Data] = useState<Section4Data | null>(null);
+  const [sec4Data, setSec4Data] = useState<Section4Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -22,7 +23,7 @@ const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
     const findData = async () => {
       try {
         const data = await findSec1Info("/slmp/transfer/full-form", id);
-        setSec3Data(data[0]);
+        setSec4Data(data[0]);
       } catch (error) {
         setError(error as Error);
       } finally {
@@ -47,10 +48,13 @@ const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
           <h5>
             Section 4: Acceptance of Request for transfer of software license{" "}
           </h5>
-          <p>Acceptance Status: {sec3Data?.Accepted}</p>
+          {sec4Data?.Accepted == "Pending" && (
+            <div>New Assignee: {sec4Data.NewAssignee}</div>
+          )}
+          <p>Acceptance Status: {sec4Data?.Accepted}</p>
         </div>
       </div>
-      {sec3Data?.Accepted != "Pending" && (
+      {sec4Data?.Accepted != "Pending" && (
         <table
           style={{
             width: "100%",
@@ -71,7 +75,7 @@ const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
                 }}
               >
                 <b>Name of AO:</b>
-                <div>{sec3Data?.AcceptFullName}</div>
+                <div>{sec4Data?.AcceptFullName}</div>
               </td>
               <td
                 style={{
@@ -82,7 +86,7 @@ const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
                 }}
               >
                 <b>Division / Programme:</b>
-                <div>{sec3Data?.AcceptDivisionProgram}</div>
+                <div>{sec4Data?.AcceptDivisionProgram}</div>
               </td>
               <td
                 style={{
@@ -94,7 +98,7 @@ const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
                 }}
               >
                 <b>Date of Approval:</b>
-                <div>{sec3Data?.AcceptDate}</div>
+                <div>{sec4Data?.AcceptDate}</div>
               </td>
             </tr>
             <tr
@@ -108,7 +112,7 @@ const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
                 }}
               >
                 <b>Remarks:</b>
-                <div>{sec3Data?.AcceptRemarks}</div>
+                <div>{sec4Data?.AcceptRemarks}</div>
               </td>
             </tr>
           </tbody>

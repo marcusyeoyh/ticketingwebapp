@@ -13,6 +13,7 @@ type Section2Data = {
   EndorseAdditionalInfo: string;
   EndorseRemarks: string;
   EndorseAttachment: string;
+  EndorserID: string;
 };
 
 type ShowSection2Props = {
@@ -61,6 +62,9 @@ const ShowSection2: React.FC<ShowSection2Props> = ({ id }) => {
           <h5>
             Section 2: Verification of Request for transfer of software license
           </h5>
+          {sec2Data?.Endorsed == "Pending" && (
+            <div>Endorser: {sec2Data.EndorserID}</div>
+          )}
           <p>Endorse Status: {sec2Data?.Endorsed}</p>
         </div>
 
