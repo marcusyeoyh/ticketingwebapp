@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ShowSLMPRejected from "./SLMP/Install/Rejected/ShowSLMPRejected";
+import ShowSLMPRejected from "./SLMP/Install/ShowRequests/ShowSLMPRejected";
 import ShowTransferRejected from "./SLMP/Transfer/ShowRequests/ShowTransferRejected";
 import ShowDeleteRejected from "./SLMP/Delete/ShowRequests/ShowDeleteRejected";
 

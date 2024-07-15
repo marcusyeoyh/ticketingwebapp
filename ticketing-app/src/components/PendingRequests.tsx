@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ShowSLMPInstall from "./ShowRequests/ShowSLMPInstall";
+import ShowSLMPInstall from "./SLMP/Install/ShowRequests/ShowSLMPInstall";
 import ShowSLMPTransfer from "./SLMP/Transfer/ShowRequests/ShowSLMPTransfer";
 import ShowSLMPDelete from "./SLMP/Delete/ShowRequests/ShowSLMPDelete";
 

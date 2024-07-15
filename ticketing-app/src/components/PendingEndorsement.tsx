@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ShowSLMPEndorsements from "./ShowEndorsements/ShowSLMPEndorsements";
+import ShowSLMPEndorsements from "./SLMP/Install/ShowRequests/ShowSLMPEndorsements";
 import ShowTransferEndorsements from "./SLMP/Transfer/ShowRequests/ShowTransferEndorsements";
 import ShowDeleteEndorsements from "./SLMP/Delete/ShowRequests/ShowDeleteEndorsements";
 

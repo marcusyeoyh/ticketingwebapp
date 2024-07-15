@@ -1,4 +1,3 @@
-import React from "react";
 import { useUser } from "../../UserContext";
 
 const UserProfile = () => {
@@ -7,27 +6,34 @@ const UserProfile = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
+    <div style={{ margin: "1rem" }}>
+      <h3>Your user profile:</h3>
       <p>
-        <strong>Full Name:</strong> {user?.full_name}
+        <strong>Full Name:</strong>
+        {user?.full_name ? user?.full_name : "No Information"}
       </p>
       <p>
-        <strong>Email:</strong> {user?.email}
+        <strong>Email:</strong> {user?.email ? user?.email : "No Information"}
       </p>
       <p>
-        <strong>Username:</strong> {user?.username}
+        <strong>Username:</strong>
+        {user?.username ? user?.username : "No Information"}
       </p>
       <p>
-        <strong>Job Title:</strong> {user?.job_title}
+        <strong>Job Title:</strong>
+        {user?.job_title ? user?.job_title : "No Information"}
       </p>
       <p>
-        <strong>Department:</strong> {user?.department}
+        <strong>Department:</strong>{" "}
+        {user?.department ? user?.department : "No Information"}
       </p>
       <p>
-        <strong>Manager:</strong> {user?.manager}
+        <strong>Manager:</strong>{" "}
+        {user?.manager ? user?.manager : "No Information"}
       </p>
       <p>
-        <strong>Role: </strong> {user?.user_role}
+        <strong>Role: </strong>{" "}
+        {user?.user_role ? user?.user_role : "No Information"}
       </p>
     </div>
   );

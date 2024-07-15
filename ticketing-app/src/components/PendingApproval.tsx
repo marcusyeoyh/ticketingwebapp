@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ShowSLMPApprovals from "./ShowApprovals/ShowSLMPApprovals";
+import ShowSLMPApprovals from "./SLMP/Install/ShowRequests/ShowSLMPApprovals";
 import ShowTransferApprovals from "./SLMP/Transfer/ShowRequests/ShowTransferApprovals";
 
 type PendingApprovalProp = {
