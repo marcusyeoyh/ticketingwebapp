@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { GetUsername } from "../../../../utils/GetUserInfo";
 import { findRequests } from "../../../API";
 
+// Component that shows the user’s delete request history
+
+// datatype that stores needed information about each request
 type AllReq = {
   RequestID: number;
   Endorsed: string;
@@ -10,8 +13,13 @@ type AllReq = {
 };
 
 const ShowAllDelete = () => {
+  // allows navigation to view information about the particular request
   const navigate = useNavigate();
+
+  // obtains username of user
   const { username, loadingUsername, errorUsername } = GetUsername();
+
+  // array of requests that have be raised by the user
   const [data, setData] = useState<AllReq[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -24,6 +32,7 @@ const ShowAllDelete = () => {
     return <div>Error: {errorUsername}</div>;
   }
 
+  // hook to find all delete requests raised by the user
   useEffect(() => {
     const fetchData = async () => {
       if (username) {
@@ -50,6 +59,7 @@ const ShowAllDelete = () => {
     return <div>Error: {error.message}</div>;
   }
 
+  // handles redirection when button is clicked to view more information about the particular request
   const handleClick = (id: number) => {
     navigate(`/view-delete-request/${id}`);
   };

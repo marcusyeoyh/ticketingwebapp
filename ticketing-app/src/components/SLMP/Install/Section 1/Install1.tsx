@@ -3,6 +3,9 @@ import { getUsers, submitForm } from "../../../API";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../../UserContext";
 
+// Component contains the form and fields for section 1 of the install request
+
+// returns date string to be used if an attachment is added
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -10,6 +13,7 @@ const formatDate = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
+// stores user information which is used to autofill form for EndorserID, ApproverID
 type UserInfo = {
   full_name: string;
   username: string;
@@ -18,6 +22,8 @@ type UserInfo = {
 const Install1: React.FC = () => {
   const { user } = useUser();
   const curDate = formatDate(new Date());
+
+  // states to handle all existing endorsing officer information and faciliates the searching of desired endorsing officer.
   const [endorsingOfficers, setEndorsingOfficers] = useState<UserInfo[] | null>(
     null
   );
@@ -28,6 +34,7 @@ const Install1: React.FC = () => {
   const [showEODropdown, setShowEODropdown] = useState(false);
   const [noEOAlert, setNoEOAlert] = useState(false);
 
+  // states to handle all existing approving officer information and faciliates the searching of desired approving officer.
   const [approvingOfficers, setApprovingOfficers] = useState<UserInfo[] | null>(
     null
   );
@@ -38,6 +45,7 @@ const Install1: React.FC = () => {
   const [showAODropdown, setShowAODropdown] = useState(false);
   const [noAOAlert, setNoAOAlert] = useState(false);
 
+  // stores all variables for the form
   const [formData, setFormData] = useState({
     ROID: user?.username || "",
     FullName: user?.full_name || "",
@@ -61,6 +69,7 @@ const Install1: React.FC = () => {
   });
   const navigate = useNavigate();
 
+  // obtains user username and full name to automatically update fields
   useEffect(() => {
     if (user?.username) {
       setFormData((prevData) => ({
@@ -76,6 +85,7 @@ const Install1: React.FC = () => {
     }
   }, [user]);
 
+  // obtain list of all endorsing officers
   useEffect(() => {
     const fetchEOData = async () => {
       try {
@@ -90,6 +100,7 @@ const Install1: React.FC = () => {
     fetchEOData();
   }, []);
 
+  // obtain list of all approving officers
   useEffect(() => {
     const fetchAOData = async () => {
       try {
@@ -118,6 +129,7 @@ const Install1: React.FC = () => {
     return <div>Error {aoError.message}</div>;
   }
 
+  // handle change in a particular form intput field. the existing state for the formdata is copied over and the changed field is upadted
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -131,6 +143,7 @@ const Install1: React.FC = () => {
     }
   };
 
+  // handles the submission of the form, ensuring that all fields are filled up correctly before the API is called
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.ApproverID == "") {
@@ -152,6 +165,7 @@ const Install1: React.FC = () => {
     }
   };
 
+  // handles the searching functionality for endorsing officer, approving officer and new assignee
   const handleSearch = (
     e: React.ChangeEvent<HTMLInputElement>,
     setSearchTerm: React.Dispatch<React.SetStateAction<string>>,
@@ -178,6 +192,7 @@ const Install1: React.FC = () => {
     }
   };
 
+  // handles the selecting of a search from handleSearch
   const handleSelect = (
     field: "EndorserID" | "ApproverID" | "NewAssignee",
     officer: UserInfo,
@@ -196,6 +211,7 @@ const Install1: React.FC = () => {
     setAlert(false);
   };
 
+  // handles the event that the user clicks away from the search field
   const clickAway = (
     setShowDropdown: React.Dispatch<React.SetStateAction<boolean>>
   ) => {

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { downloadFile, findSec1Info } from "../../../API";
 
+// Component that shows all information for section 1 for the request
+// Does not show information if the request is still pending
+
 type SLMPSec1Data = {
   ROID: string;
   DivisionProgram: string;
@@ -25,10 +28,12 @@ type ShowSection1Props = {
 };
 
 const ShowSection1: React.FC<ShowSection1Props> = ({ id }) => {
+  // state containing data of request
   const [sec1Data, setSec1Data] = useState<SLMPSec1Data | null>(null);
   const [sec1Loading, setSec1Loading] = useState(true);
   const [sec1Error, setSec1Error] = useState<Error | null>(null);
 
+  // hook which obtains request information
   useEffect(() => {
     const findData = async () => {
       try {
@@ -50,6 +55,7 @@ const ShowSection1: React.FC<ShowSection1Props> = ({ id }) => {
     return <div>Error: {sec1Error.message}</div>;
   }
 
+  // handles download of attachment
   const handleDownload = () => {
     if (sec1Data?.FileLink) {
       downloadFile(sec1Data?.FileLink);
@@ -74,6 +80,7 @@ const ShowSection1: React.FC<ShowSection1Props> = ({ id }) => {
           <h5>Section 1: Request for usage of software license</h5>
           <p>Request ID: {id}</p>
         </div>
+        {/* button to download attachment appears if an attachment exists */}
         {sec1Data?.FileLink && (
           <button
             className="btn btn-primary"

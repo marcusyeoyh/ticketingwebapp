@@ -3,6 +3,9 @@ import { GetUsername } from "../../../../utils/GetUserInfo";
 import { findEndorsements } from "../../../API";
 import { useNavigate } from "react-router-dom";
 
+// Component that shows all install requests that are pending the user’s endorsement
+
+// data type that stores pending request information
 type SLMPEndorsements = {
   RequestID: number;
   ROID: string;
@@ -11,6 +14,7 @@ type SLMPEndorsements = {
   Date: string;
 };
 
+// callback function to update the number of requests pending
 type ShowEndorsementsProps = {
   onEndorseCountChange: (count: number) => void;
 };
@@ -18,8 +22,13 @@ type ShowEndorsementsProps = {
 const ShowSLMPEndorsements: React.FC<ShowEndorsementsProps> = ({
   onEndorseCountChange,
 }) => {
+  // allows for navigation to endorse the particular request
   const navigate = useNavigate();
+
+  // obtains username of user
   const { username, loadingUsername, errorUsername } = GetUsername();
+
+  // states to store request information
   const [data, setData] = useState<SLMPEndorsements[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -31,6 +40,7 @@ const ShowSLMPEndorsements: React.FC<ShowEndorsementsProps> = ({
     return <div>Error: {errorUsername}</div>;
   }
 
+  // hook to obtain all request information that is pending endorsement
   useEffect(() => {
     const fetchData = async () => {
       if (username) {
@@ -60,6 +70,7 @@ const ShowSLMPEndorsements: React.FC<ShowEndorsementsProps> = ({
     return <div>Error: {error.message}</div>;
   }
 
+  // handles click to endorse request
   const handleClick = (id: number) => {
     navigate(`/endorse-request/${id}`);
   };

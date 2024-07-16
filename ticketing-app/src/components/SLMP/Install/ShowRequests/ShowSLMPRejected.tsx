@@ -3,10 +3,14 @@ import { GetUsername } from "../../../../utils/GetUserInfo";
 import { findRequests } from "../../../API";
 import { useNavigate } from "react-router-dom";
 
+// component that shows all the install requests that require the user's amendments
+
+// callback function that updates the number of requests
 type ShowSLMPRejectedProps = {
   onRejectCountChange: (count: number) => void;
 };
 
+// datatype that stores the information needed for each request
 type SLMPRejections = {
   RequestID: number;
   ROID: string;
@@ -18,8 +22,13 @@ type SLMPRejections = {
 const ShowSLMPRejected: React.FC<ShowSLMPRejectedProps> = ({
   onRejectCountChange,
 }) => {
+  // allows for redirection to page to allow user to amend request
   const navigate = useNavigate();
+
+  // obtain user's username
   const { username, loadingUsername, errorUsername } = GetUsername();
+
+  // array of requests that requires user's amendments
   const [data, setData] = useState<SLMPRejections[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -32,6 +41,7 @@ const ShowSLMPRejected: React.FC<ShowSLMPRejectedProps> = ({
     return <div>Error: {errorUsername}</div>;
   }
 
+  // hook that finds all install requests that requires user's amendments
   useEffect(() => {
     const findData = async () => {
       if (username) {
@@ -59,9 +69,11 @@ const ShowSLMPRejected: React.FC<ShowSLMPRejectedProps> = ({
     return <div>Error: {error.message}</div>;
   }
 
+  // handles redirect when a particular request is selected
   const handleClick = (id: number) => {
     navigate(`/amend-request/${id}`);
   };
+
   return (
     <div style={{ margin: "1rem" }}>
       <h4>SLMP Install Requests:</h4>

@@ -1,11 +1,15 @@
-import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./FormSubmitted.css";
 import NavBar from "../../components/NavBar";
 
+// Page that is redirected to when a user has successfully approved a request
+
 const FormApproved = () => {
+  // obtain request id from state
   const location = useLocation();
   const { formid } = location.state || {};
+
+  // allows for redirection back to home page
   const navigate = useNavigate();
 
   const handleButtonClick = () => {

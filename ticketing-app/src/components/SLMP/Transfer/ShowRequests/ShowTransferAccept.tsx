@@ -3,10 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { GetUsername } from "../../../../utils/GetUserInfo";
 import { findRequests } from "../../../API";
 
+// Component that shows requests pending the user’s acceptance
+
+// callback function that updates the number of requests that is pending the user's acceptance
 type ShowTransferAcceptProps = {
   onAcceptCountChange: (count: number) => void;
 };
 
+// datatype that stores the information needed to describe each pending request
 type TransferAccept = {
   RequestID: number;
   ROID: string;
@@ -19,8 +23,13 @@ type TransferAccept = {
 const ShowTransferAccept: React.FC<ShowTransferAcceptProps> = ({
   onAcceptCountChange,
 }) => {
+  // allows for redirection to the selected request to be accepted
   const navigate = useNavigate();
+
+  // obtains username of logged in user
   const { username, loadingUsername, errorUsername } = GetUsername();
+
+  // array that contains data of all requests pending the user's acceptance
   const [data, setData] = useState<TransferAccept[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -32,6 +41,7 @@ const ShowTransferAccept: React.FC<ShowTransferAcceptProps> = ({
     return <div>Error: {errorUsername}</div>;
   }
 
+  // hook that finds all requests that are pending the user's acceptance
   useEffect(() => {
     const fetchData = async () => {
       if (username) {
@@ -60,6 +70,7 @@ const ShowTransferAccept: React.FC<ShowTransferAcceptProps> = ({
     return <div>Error: {error.message}</div>;
   }
 
+  // handles redirect when a requests is needed to be accepted
   const handleClick = (id: number) => {
     navigate(`/approve-accept-request/${id}`);
   };

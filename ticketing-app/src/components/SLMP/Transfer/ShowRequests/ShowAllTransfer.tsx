@@ -1,98 +1,90 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GetUsername } from "../../../../utils/GetUserInfo";
-import { findApprovals } from "../../../API";
+import { findRequests } from "../../../API";
 
-// Component that shows all install requests that are pending the user’s approval
+// Component that shows the user’s transfer request history
 
-// data type that stores information regarding pending approval request
-type SLMPApprovals = {
+// datatype that stores needed information about each request
+type AllReq = {
   RequestID: number;
-  ROID: string;
-  EndorserID: string;
-  ApproverID: string;
+  Endorsed: string;
+  Approved: string;
+  Accepted: string;
   Date: string;
 };
 
-// callback function that updates the number of approval requests
-type ShowSLMPApprovalsProps = {
-  onApprovalCountChange: (count: number) => void;
-};
-
-const ShowSLMPApprovals: React.FC<ShowSLMPApprovalsProps> = ({
-  onApprovalCountChange,
-}) => {
-  // allows for navigation to view the full request to be approved
+const ShowAllTransfer = () => {
+  // allows navigation to view information about the particular request
   const navigate = useNavigate();
 
-  // loads the username of the logged in user
+  // obtains username of user
   const { username, loadingUsername, errorUsername } = GetUsername();
 
-  // state that stores all the pending requests
-  const [data, setData] = useState<SLMPApprovals[] | null>(null);
+  // array of requests that have be raised by the user
+  const [data, setData] = useState<AllReq[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   if (loadingUsername) {
     return <div>Loading username...</div>;
   }
+
   if (errorUsername) {
     return <div>Error: {errorUsername}</div>;
   }
 
-  // hook that finds all the pending approval requests
+  // hook to find all transfer requests raised by the user
   useEffect(() => {
     const fetchData = async () => {
       if (username) {
         try {
-          const response = await findApprovals(
-            "/slmp/install/find-approvals",
+          const response = await findRequests(
+            "/slmp/transfer/find-all",
             username
           );
           setData(response);
-          onApprovalCountChange(response.length);
         } catch (error) {
           setError(error as Error);
-          onApprovalCountChange(0);
         } finally {
           setLoading(false);
         }
       }
     };
     fetchData();
-  }, [username, onApprovalCountChange]);
+  }, [username]);
 
   if (loading) {
-    return <div>Loading data from database...</div>;
+    return <div>Loading...</div>;
   }
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
-  // handles the approval of a request
+  // handles redirection when button is clicked to view more information about the particular request
   const handleClick = (id: number) => {
-    navigate(`/approve-request/${id}`);
+    navigate(`/view-transfer-request/${id}`);
   };
 
   return (
     <div style={{ margin: "1rem" }}>
-      <h4>Pending SLMP Install Requests:</h4>
+      <h4>Your SLMP Transfer Request History:</h4>
       {data && data.length > 0 ? (
         <table className="table table-striped">
           <colgroup>
-            <col style={{ width: "15%" }} />
-            <col style={{ width: "14%" }} />
-            <col style={{ width: "14%" }} />
-            <col style={{ width: "28%" }} />
-            <col style={{ width: "14%" }} />
-            <col style={{ width: "15%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "17%" }} />
+            <col style={{ width: "17%" }} />
+            <col style={{ width: "17%" }} />
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "10%" }} />
           </colgroup>
           <thead>
             <tr>
               <th scope="col">Request ID</th>
-              <th scope="col">ROID</th>
-              <th scope="col">Endorser</th>
-              <th scope="col">Approver</th>
+              <th scope="col">Endorsed Status</th>
+              <th scope="col">Approved Status</th>
+              <th scope="col">Accepted Status</th>
               <th scope="col">Date Requested</th>
               <th scope="col">Further Actions</th>
             </tr>
@@ -101,16 +93,16 @@ const ShowSLMPApprovals: React.FC<ShowSLMPApprovalsProps> = ({
             {data.map((request, index) => (
               <tr key={index} style={{ verticalAlign: "middle" }}>
                 <th scope="row">{request.RequestID}</th>
-                <td>{request.ROID}</td>
-                <td>{request.EndorserID}</td>
-                <td>{request.ApproverID}</td>
+                <td>{request.Endorsed}</td>
+                <td>{request.Approved}</td>
+                <td>{request.Accepted}</td>
                 <td>{request.Date}</td>
                 <td>
                   <button
                     className="btn btn-primary"
                     onClick={() => handleClick(request.RequestID)}
                   >
-                    Approve/More Information
+                    More Information
                   </button>
                 </td>
               </tr>
@@ -118,10 +110,10 @@ const ShowSLMPApprovals: React.FC<ShowSLMPApprovalsProps> = ({
           </tbody>
         </table>
       ) : (
-        <p>No pending requests.</p>
+        <p>No prior requests.</p>
       )}
     </div>
   );
 };
 
-export default ShowSLMPApprovals;
+export default ShowAllTransfer;

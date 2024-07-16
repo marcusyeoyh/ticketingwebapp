@@ -3,10 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { GetUsername } from "../../../../utils/GetUserInfo";
 import { findRequests } from "../../../API";
 
+// component that shows all the transfer requests that require the user's amendments
+
+// callback function that updates the number of requests
 type ShowTransferRejectedProps = {
   onRejectCountChange: (count: number) => void;
 };
 
+// datatype that stores the information needed for each request
 type SLMPRejections = {
   RequestID: number;
   ROID: string;
@@ -19,8 +23,13 @@ type SLMPRejections = {
 const ShowTransferRejected: React.FC<ShowTransferRejectedProps> = ({
   onRejectCountChange,
 }) => {
+  // allows for redirection to page to allow user to amend request
   const navigate = useNavigate();
+
+  // obtain user's username
   const { username, loadingUsername, errorUsername } = GetUsername();
+
+  // array of requests that requires user's amendments
   const [data, setData] = useState<SLMPRejections[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -33,6 +42,7 @@ const ShowTransferRejected: React.FC<ShowTransferRejectedProps> = ({
     return <div>Error: {errorUsername}</div>;
   }
 
+  // hook that finds all transfer requests that requires user's amendments
   useEffect(() => {
     const findData = async () => {
       if (username) {
@@ -60,6 +70,7 @@ const ShowTransferRejected: React.FC<ShowTransferRejectedProps> = ({
     return <div>Error: {error.message}</div>;
   }
 
+  // handles redirect when a particular request is selected
   const handleClick = (id: number) => {
     navigate(`/amend-transfer-request/${id}`);
   };

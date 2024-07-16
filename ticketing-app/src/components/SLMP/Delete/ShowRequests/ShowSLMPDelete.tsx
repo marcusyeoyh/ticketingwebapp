@@ -3,21 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { GetUsername } from "../../../../utils/GetUserInfo";
 import { findRequests } from "../../../API";
 
-type ShowSLMPDeleteProps = {
-  onPendingCountChange: (count: number) => void;
-};
+// component that shows all install requests that are pending for the logged on user
 
+// attributes of the pending requests that are shown on the table
 type SLMPDelete = {
   RequestID: number;
   Endorsed: string;
   Date: string;
 };
 
+// prop that contains the callback function to update the number of pending delete requests
+type ShowSLMPDeleteProps = {
+  onPendingCountChange: (count: number) => void;
+};
+
 const ShowSLMPDelete: React.FC<ShowSLMPDeleteProps> = ({
   onPendingCountChange,
 }) => {
+  // allows for navigation to view more information of the request
   const navigate = useNavigate();
+
+  // obtain username of user
   const { username, loadingUsername, errorUsername } = GetUsername();
+
+  // state that contains the pending requests
   const [data, setData] = useState<SLMPDelete[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -29,6 +38,7 @@ const ShowSLMPDelete: React.FC<ShowSLMPDeleteProps> = ({
     return <div>Error: {errorUsername}</div>;
   }
 
+  // hook that fetches the pending delete requests and updates the count
   useEffect(() => {
     const fetchData = async () => {
       if (username) {
@@ -57,6 +67,7 @@ const ShowSLMPDelete: React.FC<ShowSLMPDeleteProps> = ({
     return <div>Error: {error.message}</div>;
   }
 
+  // handles redirection to view more information of the request
   const handleClick = (id: number) => {
     navigate(`/view-delete-request/${id}`);
   };

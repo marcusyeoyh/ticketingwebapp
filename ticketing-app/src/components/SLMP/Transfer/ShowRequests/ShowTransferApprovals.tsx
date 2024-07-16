@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { GetUsername } from "../../../../utils/GetUserInfo";
 import { findApprovals } from "../../../API";
 
-type ShowTransferApprovalsProps = {
-  onApprovalCountChange: (count: number) => void;
-};
+// Component that shows all transfer requests that are pending the user’s approval
 
+// data type that stores information regarding pending approval request
 type TransferApprovals = {
   RequestID: number;
   ROID: string;
@@ -16,11 +15,21 @@ type TransferApprovals = {
   Date: string;
 };
 
+// callback function that updates the number of approval requests
+type ShowTransferApprovalsProps = {
+  onApprovalCountChange: (count: number) => void;
+};
+
 const ShowTransferApprovals: React.FC<ShowTransferApprovalsProps> = ({
   onApprovalCountChange,
 }) => {
+  // allows for navigation to view the full request to be approved
   const navigate = useNavigate();
+
+  // loads the username of the logged in user
   const { username, loadingUsername, errorUsername } = GetUsername();
+
+  // state that stores all the pending requests
   const [data, setData] = useState<TransferApprovals[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -32,6 +41,7 @@ const ShowTransferApprovals: React.FC<ShowTransferApprovalsProps> = ({
     return <div>Error: {errorUsername}</div>;
   }
 
+  // hook that finds all the pending approval requests
   useEffect(() => {
     const fetchData = async () => {
       if (username) {
@@ -60,6 +70,7 @@ const ShowTransferApprovals: React.FC<ShowTransferApprovalsProps> = ({
     return <div>Error: {error.message}</div>;
   }
 
+  // handles the approval of a request
   const handleClick = (id: number) => {
     navigate(`/approve-transfer-request/${id}`);
   };

@@ -1,13 +1,16 @@
-import React from "react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import "./SLMP-requests/FormSubmitted.css";
 
+// Page that is redirected to when a user tries to access a link that they do not have correct permission to
+
 const UnauthorizedAccess = () => {
+  // allows for navigation back to home page
   const navigate = useNavigate();
   const handleButtonClick = () => {
     navigate("/");
   };
+
   return (
     <>
       <NavBar />

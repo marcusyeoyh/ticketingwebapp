@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { findSec1Info } from "../../../API";
 
+// Component that shows all information for section 3 for the request
+// Does not show information if the request is still pending
+
 type Section3Data = {
   Approved: string;
   ApproveFullName: string;
@@ -15,10 +18,12 @@ type ShowSection3Props = {
 };
 
 const ShowSection3: React.FC<ShowSection3Props> = ({ id }) => {
+  // state containing data of request
   const [sec3Data, setSec3Data] = useState<Section3Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  // hook which obtains request information
   useEffect(() => {
     const findData = async () => {
       try {

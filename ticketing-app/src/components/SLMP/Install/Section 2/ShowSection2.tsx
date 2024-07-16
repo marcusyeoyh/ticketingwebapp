@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { findSec1Info, downloadFile } from "../../../API";
 
+// Component that shows all information for section 2 for the request
+// Does not show information if the request is still pending
+
 type Section2Data = {
   Endorsed: string;
   EndorseFullName: string;
@@ -21,10 +24,12 @@ type ShowSection2Props = {
 };
 
 const ShowSection2: React.FC<ShowSection2Props> = ({ id }) => {
+  // state containing data of request
   const [sec2Data, setSec2Data] = useState<Section2Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  // hook which obtains request information
   useEffect(() => {
     const findData = async () => {
       try {
@@ -47,6 +52,7 @@ const ShowSection2: React.FC<ShowSection2Props> = ({ id }) => {
     return <div>Error: {error.message}</div>;
   }
 
+  // handles download of attachment
   const handleDownload = () => {
     if (sec2Data?.EndorseAttachment) {
       downloadFile(sec2Data?.EndorseAttachment);
@@ -68,6 +74,7 @@ const ShowSection2: React.FC<ShowSection2Props> = ({ id }) => {
           <p>Endorse Status: {sec2Data?.Endorsed}</p>
         </div>
 
+        {/* button to download attachment appears if an attachment exists */}
         {sec2Data?.EndorseAttachment && sec2Data?.Endorsed != "Pending" && (
           <button
             className="btn btn-primary"

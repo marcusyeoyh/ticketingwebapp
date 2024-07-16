@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteReq, downloadCSV, findRequests } from "../../../API";
 
+// component that returns all the Install requests in the database.
+
+// datatype that contains all the attributes to be displayed on the table
 type AllReq = {
   RequestID: string;
   FullName: string;
@@ -11,12 +14,15 @@ type AllReq = {
 };
 
 const ShowAdminInstall = () => {
+  // allows for navigation to view all the request data of a particular request id
   const navigate = useNavigate();
+
+  // state that contains all the data for all install requests
   const [data, setData] = useState<AllReq[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [deletedItems, setDeletedItems] = useState<string[]>([]);
 
+  // hook that finds all the install requests in the database and updates the data state.
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,10 +44,12 @@ const ShowAdminInstall = () => {
     return <div>Error: {error.message}</div>;
   }
 
+  // handles navigation to show all information of a particular request
   const handleClick = (id: string) => {
     navigate(`/view-request/${id}`);
   };
 
+  // handles downloading of all request information into a csv file
   const handleCSVClick = async () => {
     try {
       await downloadCSV("/slmp/install/downloadCSV", "install");
@@ -50,10 +58,10 @@ const ShowAdminInstall = () => {
     }
   };
 
+  // handles deletion of a request when the delete button is clicked
   const deleteClick = async (id: string) => {
     try {
       await deleteReq("/submitslmp/install/deleteReq", id);
-      setDeletedItems((prev) => [...prev, id]);
       setTimeout(() => {
         setData((prev) =>
           prev ? prev.filter((item) => item.RequestID !== id) : null
@@ -69,6 +77,7 @@ const ShowAdminInstall = () => {
       <div className="d-flex justify-content-between">
         <h4>SLMP Install Records:</h4>
         {data && data.length > 0 && (
+          // button to download a csv of all install requests
           <button className="btn btn-primary" onClick={() => handleCSVClick()}>
             Download CSV
           </button>
@@ -113,6 +122,7 @@ const ShowAdminInstall = () => {
                   </button>
                 </td>
                 <td>
+                  {/* button to delete a particular request */}
                   <button
                     className="btn btn-danger"
                     onClick={() => deleteClick(request.RequestID)}

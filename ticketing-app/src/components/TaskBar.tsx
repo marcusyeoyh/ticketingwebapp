@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import ProcessSelect from "./ProcessSelect";
 import PendingRequests from "./PendingRequests";
 import PendingEndorsement from "./PendingEndorsement";
@@ -7,29 +7,46 @@ import PendingReject from "./PendingReject";
 import AllReq from "./AllReq";
 import ShowTransferAccept from "./SLMP/Transfer/ShowRequests/ShowTransferAccept";
 
+// Contains all actions possible for the logged in user regarding raising, checking and approving/endorsing/accepting/amending a request
+// Allows users to see all requests that they have raised
+
 const TaskBar = () => {
+  // number of pending requests that the user has
   const [pendingReq, setPendingReq] = useState(0);
+
+  // number of requests the user has that need to be endorsed
   const [endorseCount, setEndorseCount] = useState(0);
+
+  // number of requests the user has that need to be approved
   const [approveCount, setApproveCount] = useState(0);
+
+  // number of requests the user has that need to be accepted
   const [acceptCount, setAcceptCount] = useState(0);
+
+  // number of requests the user has that need further action
   const [rejectCount, setRejectCount] = useState(0);
 
+  // callback function that allows for the updating of number of pending requests
   const handlePendingReqChange = useCallback((count: number) => {
     setPendingReq(count);
   }, []);
 
+  // callback function that allows for the updating of number of pending endorsements
   const handleEndorseCount = useCallback((count: number) => {
     setEndorseCount(count);
   }, []);
 
+  // callback function that allows for the updating of number of pending approvals
   const handleApproveCount = useCallback((count: number) => {
     setApproveCount(count);
   }, []);
 
+  // callback function that allows for the updating of number of pending accepts
   const handleAcceptCount = useCallback((count: number) => {
     setAcceptCount(count);
   }, []);
 
+  // callback function that allows for the updating of number of pending ammendmends
   const handleRejectCount = useCallback((count: number) => {
     setRejectCount(count);
   }, []);
@@ -38,6 +55,7 @@ const TaskBar = () => {
     <>
       <nav>
         <div className="nav nav-tabs" id="nav-tab" role="tablist">
+          {/* allows users to raise a new request */}
           <button
             className="nav-link active"
             id="nav-process-select-tab"
@@ -51,6 +69,7 @@ const TaskBar = () => {
             Make a new request
           </button>
           {pendingReq > 0 && (
+            // if there are any pending requests by the user, they will be visible here
             <button
               className="nav-link"
               id="nav-pending-requests-tab"
@@ -71,6 +90,7 @@ const TaskBar = () => {
             </button>
           )}
           {endorseCount > 0 && (
+            // if there are any pending endorsements by the user, they will be visible here
             <button
               className="nav-link"
               id="nav-pending-endorsement-tab"
@@ -91,6 +111,7 @@ const TaskBar = () => {
             </button>
           )}
           {approveCount > 0 && (
+            // if there are any pending approvals by the user, they will be visible here
             <button
               className="nav-link"
               id="nav-pending-approval-tab"
@@ -112,6 +133,7 @@ const TaskBar = () => {
             </button>
           )}
           {acceptCount > 0 && (
+            // if there are any pending accept by the user, they will be visible here
             <button
               className="nav-link"
               id="nav-pending-accept-tab"
@@ -133,6 +155,7 @@ const TaskBar = () => {
             </button>
           )}
           {rejectCount > 0 && (
+            // if there are any pending amends by the user, they will be visible here
             <button
               className="nav-link"
               id="nav-pending-reject-tab"
@@ -153,6 +176,8 @@ const TaskBar = () => {
               </span>
             </button>
           )}
+
+          {/* view entire request history of the user */}
           <button
             className="nav-link"
             id="nav-request-history-tab"
@@ -167,6 +192,7 @@ const TaskBar = () => {
           </button>
         </div>
       </nav>
+
       <div className="tab-content" id="nav-tabContent">
         <div
           className="tab-pane fade show active"

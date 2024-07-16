@@ -1,6 +1,8 @@
 import NavBar from "../../../components/NavBar";
 import Install1 from "../../../components/SLMP/Install/Section 1/Install1";
 
+// Page with form for section 1 of the install request
+
 const SLMPInstall = () => {
   return (
     <>

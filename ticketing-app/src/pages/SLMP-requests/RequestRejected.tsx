@@ -1,11 +1,15 @@
-import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 import "./FormSubmitted.css";
 
+// Page that is redirected to when a user has successfully rejected a request
+
 const RequestRejected = () => {
+  // obtain request id from state
   const location = useLocation();
   const { formid } = location.state || {};
+
+  // allows for redirection back to home page
   const navigate = useNavigate();
 
   const handleButtonClick = () => {

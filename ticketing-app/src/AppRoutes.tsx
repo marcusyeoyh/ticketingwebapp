@@ -27,6 +27,11 @@ import EndorseDeleteRequest from "./pages/SLMP-requests/Delete/EndorseDeleteRequ
 import FormDeleteAmend from "./pages/SLMP-requests/Delete/FormDeleteAmend";
 import AdminViewAll from "./pages/AdminViewAll";
 
+/*
+Contains all the routes needed in the application
+VerifyID, VerifyRoles and AcceptTransferRequest are all intermediary checks to ensure that the correct user with the correct privileges are allowed to access certain links
+*/
+
 const AppRoutes = () => {
   return (
     <Routes>

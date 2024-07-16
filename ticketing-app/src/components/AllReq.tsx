@@ -1,13 +1,14 @@
-import React from "react";
 import ShowAllReq from "./SLMP/Install/ShowRequests/ShowAllReq";
-import ShowAll from "./SLMP/Transfer/ShowRequests/ShowAll";
 import ShowAllDelete from "./SLMP/Delete/ShowRequests/ShowAllDelete";
+import ShowAllTransfer from "./SLMP/Transfer/ShowRequests/ShowAllTransfer";
+
+// Component that shows the user’s request history
 
 const AllReq = () => {
   return (
     <>
       <ShowAllReq />
-      <ShowAll />
+      <ShowAllTransfer />
       <ShowAllDelete />
     </>
   );

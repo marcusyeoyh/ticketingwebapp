@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { GetUsername } from "../../../../utils/GetUserInfo";
 import { findEndorsements } from "../../../API";
 
-type ShowDeleteEndorsementsProps = {
-  onEndorseCountChange: (count: number) => void;
-};
+// Component that shows all delete requests that are pending the user’s endorsement
 
+// data type that stores pending request information
 type SLMPDeleteEndorsements = {
   RequestID: number;
   ROID: string;
@@ -14,11 +13,21 @@ type SLMPDeleteEndorsements = {
   Date: string;
 };
 
+// callback function to update the number of requests pending
+type ShowDeleteEndorsementsProps = {
+  onEndorseCountChange: (count: number) => void;
+};
+
 const ShowDeleteEndorsements: React.FC<ShowDeleteEndorsementsProps> = ({
   onEndorseCountChange,
 }) => {
+  // allows for navigation to endorse the particular request
   const navigate = useNavigate();
+
+  // obtains username of user
   const { username, loadingUsername, errorUsername } = GetUsername();
+
+  // states to store request information
   const [data, setData] = useState<SLMPDeleteEndorsements[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -30,6 +39,7 @@ const ShowDeleteEndorsements: React.FC<ShowDeleteEndorsementsProps> = ({
     return <div>Error: {errorUsername}</div>;
   }
 
+  // hook to obtain all request information that is pending endorsement
   useEffect(() => {
     const fetchData = async () => {
       if (username) {
@@ -59,6 +69,7 @@ const ShowDeleteEndorsements: React.FC<ShowDeleteEndorsementsProps> = ({
     return <div>Error: {error.message}</div>;
   }
 
+  // handles click to endorse request
   const handleClick = (id: number) => {
     navigate(`/endorse-delete-request/${id}`);
   };

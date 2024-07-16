@@ -1,10 +1,14 @@
 import { useUser } from "../../UserContext";
 
+// component that returns some attributes of the currently logged in user
+
 const UserProfile = () => {
+  // loads current user information
   const { user, loading, error } = useUser();
   if (loading) return <div>loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  // returns selected attributes of the user account, No Information is shown when there is no value for that particular attribute
   return (
     <div style={{ margin: "1rem" }}>
       <h3>Your user profile:</h3>

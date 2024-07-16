@@ -1,6 +1,10 @@
-import React from "react";
 import { useUser } from "../UserContext";
 
+/*
+Contains functions that call the User context and return specific attributes of the current logged in user
+*/
+
+//returns username of user - unique identifier for users in the Active Directory
 export const GetUsername = () => {
   const { user, loading, error } = useUser();
   if (loading || !user) {
@@ -16,6 +20,7 @@ export const GetUsername = () => {
   };
 };
 
+//returns full name of user, used in forms
 export const GetFullName = () => {
   const { user, loading, error } = useUser();
   if (loading || !user) {
@@ -31,6 +36,7 @@ export const GetFullName = () => {
   };
 };
 
+//returns role of user, used in role checking for endorsing and approvals
 export const GetRole = () => {
   const { user, loading, error } = useUser();
   if (loading || !user) {

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteReq, downloadCSV, findRequests } from "../../../API";
-// import "../../Install/ShowRequests/ShowAdminInstall.css";
 
+// component that returns all the Transfer requests in the database.
+
+// datatype that contains all the attributes to be displayed on the table
 type AllReq = {
   RequestID: string;
   FullName: string;
@@ -10,12 +12,15 @@ type AllReq = {
 };
 
 const ShowAdminTransfer = () => {
+  // allows for navigation to view all the request data of a particular request id
   const navigate = useNavigate();
+
+  // state that contains all the data for all transfer requests
   const [data, setData] = useState<AllReq[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [deletedItems, setDeletedItems] = useState<string[]>([]);
 
+  // hook that finds all the transfer requests in the database and updates the data state.
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,10 +42,12 @@ const ShowAdminTransfer = () => {
     return <div>Error: {error.message}</div>;
   }
 
+  // handles navigation to show all information of a particular request
   const handleClick = (id: string) => {
     navigate(`/view-transfer-request/${id}`);
   };
 
+  // handles downloading of all request information into a csv file
   const handleCSVClick = async () => {
     try {
       await downloadCSV("/slmp/transfer/downloadCSV", "transfer");
@@ -49,10 +56,10 @@ const ShowAdminTransfer = () => {
     }
   };
 
+  // handles deletion of a request when the delete button is clicked
   const deleteClick = async (id: string) => {
     try {
       await deleteReq("/submitslmp/transfer/deleteReq", id);
-      setDeletedItems((prev) => [...prev, id]);
       setTimeout(() => {
         setData((prev) =>
           prev ? prev.filter((item) => item.RequestID !== id) : null
@@ -67,9 +74,12 @@ const ShowAdminTransfer = () => {
     <div style={{ margin: "1rem" }}>
       <div className="d-flex justify-content-between">
         <h4>SLMP Transfer Records:</h4>
-        <button className="btn btn-primary" onClick={() => handleCSVClick()}>
-          Download CSV
-        </button>
+        {data && data.length > 0 && (
+          // button to download a csv of all transfer requests
+          <button className="btn btn-primary" onClick={() => handleCSVClick()}>
+            Download CSV
+          </button>
+        )}
       </div>
       {data && data.length > 0 ? (
         <table className="table table-striped">

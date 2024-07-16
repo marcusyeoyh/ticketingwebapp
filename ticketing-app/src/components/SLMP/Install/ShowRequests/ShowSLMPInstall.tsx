@@ -3,6 +3,9 @@ import { findRequests } from "../../../API";
 import { GetUsername } from "../../../../utils/GetUserInfo";
 import { useNavigate } from "react-router-dom";
 
+// component that shows all install requests that are pending for the logged on user
+
+// attributes of the pending requests that are shown on the table
 type SLMPInstall = {
   RequestID: number;
   Endorsed: string;
@@ -10,6 +13,7 @@ type SLMPInstall = {
   Date: string;
 };
 
+// prop that contains the callback function to update the number of pending install requests
 type ShowSLMPInstallProps = {
   onPendingCountChange: (count: number) => void;
 };
@@ -17,8 +21,13 @@ type ShowSLMPInstallProps = {
 const ShowSLMPInstall: React.FC<ShowSLMPInstallProps> = ({
   onPendingCountChange,
 }) => {
+  // allows for navigation to view more information of the request
   const navigate = useNavigate();
+
+  // obtain username of user
   const { username, loadingUsername, errorUsername } = GetUsername();
+
+  // state that contains the pending requests
   const [data, setData] = useState<SLMPInstall[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -30,6 +39,7 @@ const ShowSLMPInstall: React.FC<ShowSLMPInstallProps> = ({
     return <div>Error: {errorUsername}</div>;
   }
 
+  // hook that fetches the pending install requests and updates the count
   useEffect(() => {
     const fetchData = async () => {
       if (username) {
@@ -58,6 +68,7 @@ const ShowSLMPInstall: React.FC<ShowSLMPInstallProps> = ({
     return <div>Error: {error.message}</div>;
   }
 
+  // handles redirection to view more information of the request
   const handleClick = (id: number) => {
     navigate(`/view-request/${id}`);
   };

@@ -1,6 +1,8 @@
 import "./ProcessSelect.css";
 import { NavLink } from "react-router-dom";
 
+// component that shows the different options that the user has to raise processes: Software License Management Process, IT Assets Management Process and Enqiry and Feedback
+
 const ProcessSelect = () => {
   return (
     <div className="d-flex">
@@ -20,6 +22,7 @@ const ProcessSelect = () => {
             tracking, transfer, removal and auditing.
           </p>
           <div className="d-flex justify-content-around">
+            {/* link to raise a new SLMP Install request */}
             <NavLink
               className="nav-link d-flex flex-column align-items-center"
               to="/slmp-install"
@@ -27,6 +30,8 @@ const ProcessSelect = () => {
               <i className="bi bi-cloud-arrow-down download-icon"></i>
               <span>Install Request</span>
             </NavLink>
+
+            {/* link to raise a new SLMP Transfer request */}
             <NavLink
               className="nav-link d-flex flex-column align-items-center"
               to="/slmp-transfer"
@@ -34,6 +39,8 @@ const ProcessSelect = () => {
               <i className="bi bi-arrow-left-right"></i>
               <span>Transfer Request</span>
             </NavLink>
+
+            {/* link to raise a new SLMP Delete request */}
             <NavLink
               className="nav-link d-flex flex-column align-items-center"
               to="/slmp-delete"
@@ -45,6 +52,7 @@ const ProcessSelect = () => {
         </div>
       </div>
 
+      {/* placeholder card for Manage IT Assets requests */}
       <div className="card">
         <div className="card-body d-flex align-items-center">
           <div>
@@ -60,6 +68,7 @@ const ProcessSelect = () => {
         </div>
       </div>
 
+      {/* placeholder card for Enquiry and Feedback requests */}
       <div className="card">
         <div className="card-body d-flex align-items-center">
           <div>

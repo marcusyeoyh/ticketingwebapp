@@ -2,9 +2,14 @@ import NavBar from "../../components/NavBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./FormSubmitted.css";
 
+// Page that is redirected to when a user has successfully endorsed a request
+
 const FormEndorsed = () => {
+  // obtain request id from state
   const location = useLocation();
   const { formid } = location.state || {};
+
+  // allows for redirection back to home page
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
