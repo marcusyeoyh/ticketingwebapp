@@ -1,16 +1,24 @@
 from ldap3 import Server, Connection, ALL, NTLM
 
+# responsible for searching the AD for user attributes of the current logged in user
+
+# information of the ldap_user account and the ip address of the AD to be queried
 LDAP_SERVER = 'ldap://168.10.10.1'
 LDAP_USER = 'SDC\\ldapuser'
 LDAP_PASSWORD = 'Qwerty123'
 
+# using the ldap_user account to search for the logged in user username and obtain all relevant information about the account, can be edited to get more/less information
 def get_user_info(username):
     try:
+        # define the AD to be connected to
         server = Server(LDAP_SERVER, get_info=ALL)
+
+        # using ldap_user account, connect to the server using NTLM authentication
         conn = Connection(server, user=LDAP_USER, password=LDAP_PASSWORD, authentication=NTLM)
         if not conn.bind():
             return None
         
+        # search using the user username to obtain attributes like fullname and member_of. search domain control is sdc.test
         search_filter = f'(sAMAccountName={username})'
         conn.search('dc=sdc,dc=test', search_filter, attributes=[
             'cn', 'givenName', 'sn', 'mail', 'userPrincipalName', 'displayName',
@@ -21,6 +29,7 @@ def get_user_info(username):
         if not conn.entries:
             return None
         
+        # organizing the search results into a json file
         user_info = conn.entries[0]
         return {
             'username': username,
@@ -47,9 +56,13 @@ def get_user_info(username):
     except Exception as e:
         return None
 
+# return a list of users who are part of userGroup group
 def get_users(userGroup):
     try:
+        # server to be connected to
         server = Server(LDAP_SERVER, get_info=ALL)
+
+        # connect to AD using ldap_user account
         conn = Connection(server, user=LDAP_USER, password=LDAP_PASSWORD, authentication=NTLM)
         if not conn.bind():
             return None

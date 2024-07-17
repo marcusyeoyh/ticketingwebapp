@@ -3,10 +3,14 @@ import { GetFullName } from "../../../../utils/GetUserInfo";
 import { useNavigate } from "react-router-dom";
 import { submitForm } from "../../../API";
 
+// Component contains the form and fields for section 3 of the install request
+
+// contains id for request to be approved
 type SignApprovalProp = {
   id: string;
 };
 
+// date string for approval date
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -18,6 +22,8 @@ const SignApproval: React.FC<SignApprovalProp> = ({ id }) => {
   const { fullname, ...rest } = GetFullName();
   const curDate = formatDate(new Date());
   const navigate = useNavigate();
+
+  // state to store form input values
   const [approveData, setApproveData] = useState({
     id: id,
     FullName: fullname || "",
@@ -26,6 +32,8 @@ const SignApproval: React.FC<SignApprovalProp> = ({ id }) => {
     ApproveRemarks: "",
     Action: "",
   });
+
+  // handles submission of form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -52,6 +60,8 @@ const SignApproval: React.FC<SignApprovalProp> = ({ id }) => {
       console.error("Error submitting form:", error);
     }
   };
+
+  // handles input to fields in the form
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement

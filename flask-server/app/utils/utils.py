@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify, send_file
 import sqlite3
 import os
 
+# Responsible for finding requests given a particular username
+
 utils = Blueprint('utils', __name__)
 
 

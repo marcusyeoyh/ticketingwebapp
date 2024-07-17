@@ -1,6 +1,7 @@
-import React from "react";
 import NavBar from "../../../components/NavBar";
 import Delete1 from "../../../components/SLMP/Delete/Section 1/Delete1";
+
+// Page contains form and input fields for section 1 of a SLMP Delete request
 
 const SLMPDelete = () => {
   return (

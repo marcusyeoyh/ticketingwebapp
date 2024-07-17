@@ -3,10 +3,16 @@ import { GetFullName } from "../../../../utils/GetUserInfo";
 import { useNavigate } from "react-router-dom";
 import { submitForm } from "../../../API";
 
+// Component contains input fields for section 2 of a SLMP Delete Request
+// Responsible for sending input information to be saved in the Flask backend.
+// Allows for user attachment, Endorse and Reject options
+
+// prop with id of request to be endorsed
 type SignEndorseProp = {
   id: string;
 };
 
+// current date to be used in the form
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -18,6 +24,8 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
   const { fullname, ...rest } = GetFullName();
   const curDate = formatDate(new Date());
   const navigate = useNavigate();
+
+  // state to store form data
   const [endorseData, setEndorseData] = useState({
     id: id,
     FullName: fullname || "",
@@ -33,6 +41,7 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
     Action: "",
   });
 
+  // handles submission of form, for both endorse and reject decisions
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -61,6 +70,8 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
       console.error("Error submitting form:", error);
     }
   };
+
+  // handles change to form input fields to update current data state
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -73,6 +84,7 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
       setEndorseData({ ...endorseData, [name]: value });
     }
   };
+
   return (
     <div style={{ margin: "1rem" }}>
       <h5>Endorse form below:</h5>

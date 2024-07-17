@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { downloadFile, findSec1Info } from "../../../API";
 
+// Component that shows all information for section 1 for the request
+// Does not show information if the request is still pending
+
+// datatype that stores id of request to be deleted
 type ShowDeleteSection1Props = {
   id: string;
 };
 
+// datatype that stores all form information to be displayed
 type SLMPDeleteSec1 = {
   FullName: string;
   DivisionProgram: string;
@@ -29,6 +34,7 @@ const ShowDeleteSection1: React.FC<ShowDeleteSection1Props> = ({ id }) => {
   const [sec1Loading, setSec1Loading] = useState(true);
   const [sec1Error, setSec1Error] = useState<Error | null>(null);
 
+  // hook to obtain all section 1 information to be displayed
   useEffect(() => {
     const findData = async () => {
       try {
@@ -50,6 +56,7 @@ const ShowDeleteSection1: React.FC<ShowDeleteSection1Props> = ({ id }) => {
     return <div>Error: {sec1Error.message}</div>;
   }
 
+  // handles downloading of attached file
   const handleDownload = () => {
     if (sec1Data?.FilePath) {
       downloadFile(sec1Data?.FilePath);
@@ -74,6 +81,8 @@ const ShowDeleteSection1: React.FC<ShowDeleteSection1Props> = ({ id }) => {
           <h5>Section 1: Request for removal of software license</h5>
           <p>Request ID: {id}</p>
         </div>
+
+        {/* download button if there exists an attached file */}
         {sec1Data?.FilePath && (
           <button
             className="btn btn-primary"

@@ -3,6 +3,10 @@ import { useUser } from "../../../../UserContext";
 import { useNavigate } from "react-router-dom";
 import { getUsers, submitForm } from "../../../API";
 
+// Component contains input fields for section 1 of a SLMP Delete Request
+// Responsible for sending input information to be saved in the Flask backend
+
+// current date for form input field
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -10,6 +14,7 @@ const formatDate = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
+// datatype to store users that are have endorsing officers, approving officers or regular users roles
 type UserInfo = {
   full_name: string;
   username: string;
@@ -18,6 +23,8 @@ type UserInfo = {
 const Delete1 = () => {
   const { user } = useUser();
   const curDate = formatDate(new Date());
+
+  // state to store form data
   const [formData, setFormData] = useState({
     ROID: user?.username || "",
     FullName: user?.full_name || "",
@@ -39,6 +46,7 @@ const Delete1 = () => {
     FileUpload: null,
   });
 
+  // states to store users that have endorsing officer roles and the search functionalities to aid the input
   const [endorsingOfficers, setEndorsingOfficers] = useState<UserInfo[] | null>(
     null
   );
@@ -51,6 +59,7 @@ const Delete1 = () => {
 
   const navigate = useNavigate();
 
+  // hook to update user username and fullname to be used in the form
   useEffect(() => {
     if (user?.username) {
       setFormData((prevData) => ({
@@ -66,6 +75,7 @@ const Delete1 = () => {
     }
   }, [user]);
 
+  // hook to obtain users classified as endorsing officers
   useEffect(() => {
     const fetchEOData = async () => {
       try {
@@ -87,6 +97,7 @@ const Delete1 = () => {
     return <div>Error {eoError.message}</div>;
   }
 
+  // handles changes to input fields to update the data states to correctly reflect the latest input fields
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -100,6 +111,7 @@ const Delete1 = () => {
     }
   };
 
+  // handles submission of form and does the necessary checks before submitting the form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.EndorserID == "") {
@@ -117,6 +129,7 @@ const Delete1 = () => {
     }
   };
 
+  // hadles the search for endorsing officer
   const handleEOSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEOSearchTerm(value);
@@ -137,6 +150,7 @@ const Delete1 = () => {
     }
   };
 
+  // handles the selection of a endorsing officer
   const handleEOSelect = (officer: UserInfo) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -148,6 +162,7 @@ const Delete1 = () => {
     setNoEOAlert(false);
   };
 
+  // handles the event of clicking away from the currently selected input field
   const EOClickAway = () => {
     setTimeout(() => setShowEODropdown(false), 200);
   };

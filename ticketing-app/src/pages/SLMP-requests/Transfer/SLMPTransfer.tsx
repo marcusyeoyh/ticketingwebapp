@@ -1,6 +1,7 @@
-import React from "react";
 import NavBar from "../../../components/NavBar";
 import Transfer1 from "../../../components/SLMP/Transfer/Section 1/Transfer1";
+
+// Page contains form and input fields for section 1 of a SLMP Transfer request
 
 const SLMPTransfer = () => {
   return (

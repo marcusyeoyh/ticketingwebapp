@@ -5,7 +5,11 @@ import ShowSLMPInstallFullSection1 from "../../../components/SLMP/Install/Sectio
 import { findSec1Info, getUsers, submitForm } from "../../../components/API";
 import ShowSection2 from "../../../components/SLMP/Install/Section 2/ShowSection2";
 import ShowSection3 from "../../../components/SLMP/Install/Section 3/ShowSection3";
+import ShowSection1 from "../../../components/SLMP/Install/Section 1/ShowSection1";
 
+// Page with form for section 1 of the install request for amendment purposes
+
+// datatype with existing section 1 information
 type FormStatus = {
   ROID: string;
   FullName: string;
@@ -38,9 +42,13 @@ type UserInfo = {
 const FormAmend = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+
+  // state containing existing form data
   const [data, setData] = useState<FormStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+
+  // state containing new form data
   const [newData, setNewData] = useState({
     ROID: "",
     FullName: "",
@@ -65,6 +73,7 @@ const FormAmend = () => {
     FilePath: "",
   });
 
+  // state containing all endorsing officers
   const [endorsingOfficers, setEndorsingOfficers] = useState<UserInfo[] | null>(
     null
   );
@@ -75,6 +84,7 @@ const FormAmend = () => {
   const [showEODropdown, setShowEODropdown] = useState(false);
   const [noEOAlert, setNoEOAlert] = useState(false);
 
+  // state containing all approving officers
   const [approvingOfficers, setApprovingOfficers] = useState<UserInfo[] | null>(
     null
   );
@@ -85,6 +95,7 @@ const FormAmend = () => {
   const [showAODropdown, setShowAODropdown] = useState(false);
   const [noAOAlert, setNoAOAlert] = useState(false);
 
+  // hook to find information from old form
   useEffect(() => {
     const fetchData = async () => {
       if (id) {
@@ -101,6 +112,8 @@ const FormAmend = () => {
     fetchData();
   }, []);
 
+  // hook to update new data information with information from the old form - if there are no changes to the particular field, it will have the same data as before
+  // this prevents users from needing to fill in the form again and can instead easily choose what fields to change
   useEffect(() => {
     if (data && id) {
       setNewData({
@@ -129,6 +142,7 @@ const FormAmend = () => {
     }
   }, [data]);
 
+  // sets the search term to the old information
   useEffect(() => {
     if (newData) {
       setEOSearchTerm(newData.EndorserID);
@@ -136,6 +150,7 @@ const FormAmend = () => {
     }
   }, [data]);
 
+  // hook to find all endorsing officers in the AD
   useEffect(() => {
     const fetchEOData = async () => {
       try {
@@ -150,6 +165,7 @@ const FormAmend = () => {
     fetchEOData();
   }, []);
 
+  // hook to find all approving officers in the AD
   useEffect(() => {
     const fetchAOData = async () => {
       try {
@@ -184,6 +200,7 @@ const FormAmend = () => {
     return <div>Error {aoError.message}</div>;
   }
 
+  // handle changes to the input fields
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -197,6 +214,7 @@ const FormAmend = () => {
     }
   };
 
+  // handle submission of the form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newData.ApproverID == "") {
@@ -218,6 +236,7 @@ const FormAmend = () => {
     }
   };
 
+  // handle search for a particular endorsing/approving officer
   const handleSearch = (
     e: React.ChangeEvent<HTMLInputElement>,
     setSearchTerm: React.Dispatch<React.SetStateAction<string>>,
@@ -244,6 +263,7 @@ const FormAmend = () => {
     }
   };
 
+  // handle selection of a choice from handleSearch
   const handleSelect = (
     field: "EndorserID" | "ApproverID" | "NewAssignee",
     officer: UserInfo,
@@ -262,6 +282,7 @@ const FormAmend = () => {
     setAlert(false);
   };
 
+  // handle case that user clicks away from the field
   const clickAway = (
     setShowDropdown: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
@@ -274,10 +295,13 @@ const FormAmend = () => {
     return (
       <>
         <NavBar />
-        <ShowSLMPInstallFullSection1 id={id} />
+        <ShowSection1 id={id} />
+        {/* shows section 2 information if the endorsed status is either rejected or endorsed, prevents unnessesary information from being shown if the section is still pending */}
         {(data?.Endorsed == "Rejected" || data?.Endorsed == "Endorsed") && (
           <ShowSection2 id={id} />
         )}
+
+        {/* shows section 3 information if the endorsed status is either rejected or endorsed, prevents unnessesary information from being shown if the section is still pending */}
         {data?.Approved == "Rejected" && <ShowSection3 id={id} />}
         <form
           onSubmit={handleSubmit}

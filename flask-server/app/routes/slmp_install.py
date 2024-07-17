@@ -4,20 +4,33 @@ import os
 import csv
 from io import StringIO
 
+# Responsible for all GET requests regarding SLMP Install requests.
+# Connects to SQLite database to return results as JSON payload
+
+# defines blueprint for this file
 slmp_install = Blueprint('slmp', __name__)
 
+# defines absolute address for db
 def findDBPath(db_name):
     return os.path.join("databases", db_name)
 
+# returns history for all install requests 
 @slmp_install.route('/find-all', methods=['GET'])
 def find_slmp_install():
+    # obtain user parameter from GET request
     user = request.args.get('user')
 
     try:
+        # obtain absolute path for db
         db_path = findDBPath("SLMP.db")
+        
+        # establish connection variable to db
         connection = sqlite3.connect(db_path)
+
+        # establish connection to db
         cursor = connection.cursor()
 
+        # SQL query to be sent to db
         query = '''
             SELECT t1.id AS RequestID, t2.Approved, t2.Endorsed, t1.Date, t1.FullName
             FROM SLMPInstall t1
@@ -25,14 +38,20 @@ def find_slmp_install():
             WHERE t1.ROID = COALESCE(?,t1.ROID)    
         '''
         
+        # executes query on cursor using provided user variable
         cursor.execute(query, (user,))
+
+        # fetches result to variable results
         results = cursor.fetchall()
 
+        # creates list to append results to
         results_list = []
         for row in results:
+            # modify db data to more understandable information to be displayed to frontend
             endorsed_status = "Endorsed" if row[2] == 1 else "Pending" if row[2] == 0 else "Rejected"
             approved_status = "Approved" if row[1] == 1 else "Pending" if row[1] == 0 else "Rejected"
 
+            # append dictionary to result list
             results_list.append({
                 "RequestID": row[0],
                 "Endorsed": endorsed_status,
@@ -41,11 +60,15 @@ def find_slmp_install():
                 "FullName": row[4]
             }) 
         
+        # end connection to db
         connection.close()
+
+        # return result as a json list
         return jsonify(results_list), 200
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
 
+# find all install requests pending approval
 @slmp_install.route('/find-approvals', methods=['GET'])
 def findslmpapprovals():
     username = request.args.get('user')
@@ -82,6 +105,7 @@ def findslmpapprovals():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
 
+# return all install requests that have been rejected at any stage and are pending amendments
 @slmp_install.route('/find-rejections', methods=['GET'])
 def findslmprejections():
     username = request.args.get('user')
@@ -120,6 +144,7 @@ def findslmprejections():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
 
+# find all pending install requests
 @slmp_install.route('/find-pending', methods=['GET'])
 def findslmpinstallpending():
     user = request.args.get('user')
@@ -158,7 +183,8 @@ def findslmpinstallpending():
         return jsonify(results_list), 200
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
-    
+
+# find all install requests pending endorsement   
 @slmp_install.route('/find-endorsements', methods=['GET'])
 def findslmpendorsements():
     username = request.args.get('user')
@@ -194,6 +220,7 @@ def findslmpendorsements():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
 
+# returns all attributes for a particular request, will be parsed and the relevant attributes chosen to be displayed by the front end
 @slmp_install.route('/full-form', methods=['GET'])
 def fullform():
     reqID = request.args.get('reqID')
@@ -269,6 +296,7 @@ def fullform():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
     
+# find the request ids of requests raised by the provided ROID
 @slmp_install.route('/find-reqid', methods=['GET'])
 def findreqid():
     user = request.args.get('user')
@@ -297,6 +325,7 @@ def findreqid():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
 
+# facilitates downloading of all install request information as a csv (only used by admin)
 @slmp_install.route('/downloadCSV', methods=['GET'])
 def downloadcsv():    
     try:

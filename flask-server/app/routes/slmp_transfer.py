@@ -4,36 +4,51 @@ import os
 import csv
 from io import StringIO
 
+# Responsible for all GET requests regarding SLMP Transfer requests.
+# Connects to SQLite database to return results as JSON payload
+
+# defines blueprint for this file
 slmp_transfer = Blueprint('slmpTransfer', __name__)
 
+# defines absolute address for db
 def findDBPath(db_name):
     return os.path.join("databases", db_name)
 
+# returns history for all transfer requests 
 @slmp_transfer.route('/find-all', methods=['GET'])
 def find_slmp_transfer():
+    # obtain user parameter from GET request
     user = request.args.get('user')
 
     try:
+        # obtain absolute path for db
         db_path = findDBPath("SLMP.db")
+        # establish connection variable to db
         connection = sqlite3.connect(db_path)
+        # establish connection to db
         cursor = connection.cursor()
 
+        # SQL query to be sent to db
         query = '''
             SELECT t1.id AS RequestID, t2.Approved, t2.Endorsed, t2.Accepted, t1.Date, t1.FullName
             FROM SLMPTransfer t1
             INNER JOIN SLMPTransferStatus t2 ON t1.id = t2.id
             WHERE t1.ROID = COALESCE(?, t1.ROID)    
         '''
-        
+        # executes query on cursor using provided user variable
         cursor.execute(query, (user,))
+        # fetches result to variable results
         results = cursor.fetchall()
 
+        # creates list to append results to
         results_list = []
         for row in results:
+            # modify db data to more understandable information to be displayed to frontend
             endorsed_status = "Endorsed" if row[2] == 1 else "Pending" if row[2] == 0 else "Rejected"
             approved_status = "Approved" if row[1] == 1 else "Pending" if row[1] == 0 else "Rejected"
             accept_status = "Accepted" if row[3] == 1 else "Pending" if row[3] == 0 else "Rejected"
 
+            # append dictionary to result list
             results_list.append({
                 "RequestID": row[0],
                 "Endorsed": endorsed_status,
@@ -42,12 +57,14 @@ def find_slmp_transfer():
                 "Date": row[4],
                 "FullName": row[5]
             }) 
-        
+        # end connection to db
         connection.close()
+        # return result as a json list
         return jsonify(results_list), 200
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
 
+# find all pending transfer requests
 @slmp_transfer.route('/find-pending', methods=['GET'])
 def findslmptransferpending():
     user = request.args.get('user')
@@ -90,7 +107,8 @@ def findslmptransferpending():
     
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
-    
+
+# find all transfer requests pending endorsement   
 @slmp_transfer.route('/find-endorsements', methods=['GET'])
 def findslmpendorsements():
     username = request.args.get('user')
@@ -126,7 +144,8 @@ def findslmpendorsements():
         return jsonify(results_list), 200
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
-    
+
+# find all transfer requests pending approval
 @slmp_transfer.route('/find-approvals', methods=['GET'])
 def findslmpapprovals():
     username = request.args.get('user')
@@ -163,7 +182,8 @@ def findslmpapprovals():
         return jsonify(results_list), 200
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
-    
+
+# returns all attributes for a particular request, will be parsed and the relevant attributes chosen to be displayed by the front end   
 @slmp_transfer.route('/full-form', methods=['GET'])
 def fullform():
     reqID = request.args.get('reqID')
@@ -249,6 +269,7 @@ def fullform():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
 
+# return all transfer requests that have been rejected at any stage and are pending amendments
 @slmp_transfer.route('/find-rejections', methods=['GET'])
 def findslmprejections():
     username = request.args.get('user')
@@ -289,6 +310,7 @@ def findslmprejections():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
     
+# find the request ids of requests raised by the provided ROID
 @slmp_transfer.route('/find-reqid', methods=['GET'])
 def findreqid():
     user = request.args.get('user')
@@ -317,6 +339,7 @@ def findreqid():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
     
+# find the requests that are pending the user's acceptance
 @slmp_transfer.route('/find-accept', methods=['GET'])
 def findslmpaccept():
     username = request.args.get('user')
@@ -353,7 +376,8 @@ def findslmpaccept():
         return jsonify(results_list), 200
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
-    
+
+# find request ids that have the user as a new assignee
 @slmp_transfer.route('/find-newAssignee', methods=['GET'])
 def findnewassignee():
     user = request.args.get('user')
@@ -382,6 +406,7 @@ def findnewassignee():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
     
+# facilitates downloading of all transfer request information as a csv (only used by admin)
 @slmp_transfer.route('/downloadCSV', methods=['GET'])
 def downloadcsv():
     try:

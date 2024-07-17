@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../../UserContext";
 import { getUsers, submitForm } from "../../../API";
 
+// Component contains input fields for section 1 of a SLMP Transfer Request
+// Responsible for sending input information to be saved in the Flask backend
+
+// obtain current datatime information for form submission data
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -10,6 +14,7 @@ const formatDate = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
+// datatype to store information for users in endorsing officer, approving officer and new assignees groups
 type UserInfo = {
   full_name: string;
   username: string;
@@ -18,6 +23,8 @@ type UserInfo = {
 const Transfer1 = () => {
   const { user } = useUser();
   const curDate = formatDate(new Date());
+
+  // state to store input data
   const [formData, setFormData] = useState({
     ROID: user?.username || "",
     FullName: user?.full_name || "",
@@ -43,6 +50,7 @@ const Transfer1 = () => {
   });
   const navigate = useNavigate();
 
+  // states to store endorsing officers and facilitate searching of endorsing officers
   const [endorsingOfficers, setEndorsingOfficers] = useState<UserInfo[] | null>(
     null
   );
@@ -53,6 +61,7 @@ const Transfer1 = () => {
   const [showEODropdown, setShowEODropdown] = useState(false);
   const [noEOAlert, setNoEOAlert] = useState(false);
 
+  // states to store approving officers and facilitate searching of approving officers
   const [approvingOfficers, setApprovingOfficers] = useState<UserInfo[] | null>(
     null
   );
@@ -63,6 +72,7 @@ const Transfer1 = () => {
   const [showAODropdown, setShowAODropdown] = useState(false);
   const [noAOAlert, setNoAOAlert] = useState(false);
 
+  // states to store all users in the AD and facilitate searching of new assignees
   const [recipients, setRecipients] = useState<UserInfo[] | null>(null);
   const [rLoading, setRLoading] = useState(true);
   const [rError, setRError] = useState<Error | null>(null);
@@ -71,6 +81,7 @@ const Transfer1 = () => {
   const [showRDropdown, setShowRDropdown] = useState(false);
   const [noRAlert, setNoRAlert] = useState(false);
 
+  // obtain logged in user username and fullname to be used in form
   useEffect(() => {
     if (user?.username) {
       setFormData((prevData) => ({
@@ -86,6 +97,7 @@ const Transfer1 = () => {
     }
   }, [user]);
 
+  // hooks to find all eligible accounts that are endorsing officers, approving officers and new assignees
   useEffect(() => {
     const fetchEOData = async () => {
       try {
@@ -147,6 +159,7 @@ const Transfer1 = () => {
     return <div>Error {rError.message}</div>;
   }
 
+  // handle input to input fields in the form, saves the old state and changes the particular attribute that has been changed
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -160,6 +173,7 @@ const Transfer1 = () => {
     }
   };
 
+  // handles submission of form, checks if necessary fields are filled in and then sends the data to the Flask backend
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.ApproverID == "") {
@@ -185,6 +199,7 @@ const Transfer1 = () => {
     }
   };
 
+  // handles searching of user for either endorsing, approving officers or new assignees
   const handleSearch = (
     e: React.ChangeEvent<HTMLInputElement>,
     setSearchTerm: React.Dispatch<React.SetStateAction<string>>,
@@ -211,6 +226,7 @@ const Transfer1 = () => {
     }
   };
 
+  // handles selection of either endorsing, approving officer or new assignee after search
   const handleSelect = (
     field: "EndorserID" | "ApproverID" | "NewAssignee",
     officer: UserInfo,
@@ -229,6 +245,7 @@ const Transfer1 = () => {
     setAlert(false);
   };
 
+  // handles when user clicks away from search box
   const clickAway = (
     setShowDropdown: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
@@ -435,6 +452,9 @@ const Transfer1 = () => {
         <label htmlFor="newAssignee" className="form-label">
           New Assignee of software: *
         </label>
+        {noRAlert && (
+          <div style={{ color: "red" }}>A valid Recipient must be chosen!</div>
+        )}
         <div className="position-relative">
           <input
             type="text"

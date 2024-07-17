@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { downloadFile, findSec1Info } from "../../../API";
 
+// Component that shows all information for section 1 for the request
+// Does not show information if the request is still pending
+
+// prop that contains the id of the request being viewed
 type ShowTransferSection1Props = {
   id: string;
 };
 
+// data structure that stores all the information to be displayed
 type SLMPTransferSec1 = {
   FullName: string;
   DivisionProgram: string;
@@ -27,10 +32,12 @@ type SLMPTransferSec1 = {
 };
 
 const ShowTransferSection1: React.FC<ShowTransferSection1Props> = ({ id }) => {
+  // state that stores all section 1 data to be displayed
   const [sec1Data, setSec1Data] = useState<SLMPTransferSec1 | null>(null);
   const [sec1Loading, setSec1Loading] = useState(true);
   const [sec1Error, setSec1Error] = useState<Error | null>(null);
 
+  // hook to obtain all the information of a request given its id
   useEffect(() => {
     const findData = async () => {
       try {
@@ -52,6 +59,7 @@ const ShowTransferSection1: React.FC<ShowTransferSection1Props> = ({ id }) => {
     return <div>Error: {sec1Error.message}</div>;
   }
 
+  // handles download of attached file
   const handleDownload = () => {
     if (sec1Data?.FileLink) {
       downloadFile(sec1Data?.FileLink);
@@ -79,6 +87,8 @@ const ShowTransferSection1: React.FC<ShowTransferSection1Props> = ({ id }) => {
           </h5>
           <p>Request ID: {id}</p>
         </div>
+
+        {/* button will show if there is a link to be downloaded from */}
         {sec1Data?.FileLink && (
           <button
             className="btn btn-primary"

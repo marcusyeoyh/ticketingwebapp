@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { downloadFile, findSec1Info } from "../../../API";
 
+// Component that shows all information for section 2 for the request
+// Does not show information if the request is still pending
+
+// prop that contains the id of the request being viewed
 type ShowTransferSection2Props = {
   id: string;
 };
 
+// data structure that stores all the information to be displayed
 type Section2Data = {
   Endorsed: string;
   EndorseFullName: string;
@@ -22,10 +27,12 @@ type Section2Data = {
 };
 
 const ShowTransferSection2: React.FC<ShowTransferSection2Props> = ({ id }) => {
+  // state that stores all section 2 data to be displayed
   const [sec2Data, setSec2Data] = useState<Section2Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  // hook to obtain all the information of a request given its id
   useEffect(() => {
     const findData = async () => {
       try {
@@ -48,6 +55,7 @@ const ShowTransferSection2: React.FC<ShowTransferSection2Props> = ({ id }) => {
     return <div>Error: {error.message}</div>;
   }
 
+  // handles download of attached file
   const handleDownload = () => {
     if (sec2Data?.EndorseAttachment) {
       downloadFile(sec2Data?.EndorseAttachment);
@@ -69,6 +77,7 @@ const ShowTransferSection2: React.FC<ShowTransferSection2Props> = ({ id }) => {
           <p>Endorse Status: {sec2Data?.Endorsed}</p>
         </div>
 
+        {/* button will show if there is a link to be downloaded from and section will only show if the request has been endorsed*/}
         {sec2Data?.EndorseAttachment && sec2Data?.Endorsed != "Pending" && (
           <button
             className="btn btn-primary"

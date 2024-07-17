@@ -7,6 +7,10 @@ import ShowTransferSection2 from "../../../components/SLMP/Transfer/Section 2/Sh
 import ShowTransferSection3 from "../../../components/SLMP/Transfer/Section 3/ShowTransferSection3";
 import ShowTransferSection4 from "../../../components/SLMP/Transfer/Section 4/ShowTransferSection4";
 
+// Page contains form and input fields for section 1 of a SLMP Transfer request to allow for amendments to the request after being rejected
+// Contains existing information for Section 1, 2, 3 and 4 if they are not pending
+
+// datatype that stores old form information
 type FormStatus = {
   ROID: string;
   FullName: string;
@@ -34,6 +38,7 @@ type FormStatus = {
   Accepted: string;
 };
 
+// datatype for users that are part of endorsing officer, approving officer or regular users groups
 type UserInfo = {
   full_name: string;
   username: string;
@@ -45,6 +50,8 @@ const FormTransferAmend = () => {
   const [data, setData] = useState<FormStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+
+  // state to store
   const [newData, setNewData] = useState({
     ROID: "",
     FullName: "",
@@ -99,6 +106,7 @@ const FormTransferAmend = () => {
   const [showRDropdown, setShowRDropdown] = useState(false);
   const [noRAlert, setNoRAlert] = useState(false);
 
+  // hook to obtain existing form information and update data state
   useEffect(() => {
     const fetchData = async () => {
       if (id) {
@@ -115,6 +123,7 @@ const FormTransferAmend = () => {
     fetchData();
   }, []);
 
+  // hook to update new form data to reflect old form data
   useEffect(() => {
     if (data && id) {
       setNewData({
@@ -145,6 +154,7 @@ const FormTransferAmend = () => {
     }
   }, [data]);
 
+  // hook to set the new assignees, endorsing officers and approving officers to reflect what is in the current form
   useEffect(() => {
     if (newData) {
       setSearchRTerm(newData.NewAssignee);
@@ -153,6 +163,7 @@ const FormTransferAmend = () => {
     }
   }, [data]);
 
+  // hooks to obtain arrays of users that can be new assignees, endorsing officers and approving officers
   useEffect(() => {
     const fetchEOData = async () => {
       try {
@@ -221,6 +232,7 @@ const FormTransferAmend = () => {
     return <div>Error {rError.message}</div>;
   }
 
+  // handles changes to input fields and update the data state to reflect the latest change
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -234,6 +246,7 @@ const FormTransferAmend = () => {
     }
   };
 
+  // handles submission of form, checking to make sure that all fields are filled before amending the form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newData.ApproverID == "") {
@@ -259,6 +272,7 @@ const FormTransferAmend = () => {
     }
   };
 
+  // handles search for endorsing, approving officer or new assignee
   const handleSearch = (
     e: React.ChangeEvent<HTMLInputElement>,
     setSearchTerm: React.Dispatch<React.SetStateAction<string>>,
@@ -285,6 +299,7 @@ const FormTransferAmend = () => {
     }
   };
 
+  // handles selection of a option and sets the relevant data fields
   const handleSelect = (
     field: "EndorserID" | "ApproverID" | "NewAssignee",
     officer: UserInfo,
@@ -303,6 +318,7 @@ const FormTransferAmend = () => {
     setAlert(false);
   };
 
+  // handles situation when user clicks away from input field
   const clickAway = (
     setShowDropdown: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
@@ -520,6 +536,11 @@ const FormTransferAmend = () => {
             <label htmlFor="newAssignee" className="form-label">
               New Assignee of software: *
             </label>
+            {noRAlert && (
+              <div style={{ color: "red" }}>
+                A valid recipient must be chosen!
+              </div>
+            )}
             <div className="position-relative">
               <input
                 type="text"

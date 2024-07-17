@@ -3,10 +3,16 @@ import { GetFullName } from "../../../../utils/GetUserInfo";
 import { useNavigate } from "react-router-dom";
 import { submitForm } from "../../../API";
 
+// Component contains input fields for section 3 of a SLMP Transfer Request
+// Responsible for sending input information to be saved in the Flask backend
+// Allows for Approve and Reject options
+
+// prop that stores the id of request to be approved
 type SignApproveProps = {
   id: string;
 };
 
+// current date information to be used in the form
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -18,6 +24,8 @@ const SignApprove: React.FC<SignApproveProps> = ({ id }) => {
   const { fullname, ...rest } = GetFullName();
   const curDate = formatDate(new Date());
   const navigate = useNavigate();
+
+  // state to store form information to be sent to Flask backend
   const [approveData, setApproveData] = useState({
     id: id,
     FullName: fullname || "",
@@ -26,6 +34,8 @@ const SignApprove: React.FC<SignApproveProps> = ({ id }) => {
     ApproveRemarks: "",
     Action: "",
   });
+
+  // handles submission of form, with different actions for approve and reject
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -52,6 +62,8 @@ const SignApprove: React.FC<SignApproveProps> = ({ id }) => {
       console.error("Error submitting form:", error);
     }
   };
+
+  // handles changes to input fields the form, updating attributes to reflect the most recent change
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement

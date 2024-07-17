@@ -3,10 +3,14 @@ import { GetFullName } from "../../../../utils/GetUserInfo";
 import { useNavigate } from "react-router-dom";
 import { submitForm } from "../../../API";
 
+// Component contains the form and fields for section 2 of the install request
+
+// id of the request to be endorsed
 type SignEndorseProp = {
   id: string;
 };
 
+// date to aid file pathing for attachment
 const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -18,6 +22,8 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
   const { fullname, ...rest } = GetFullName();
   const curDate = formatDate(new Date());
   const navigate = useNavigate();
+
+  // stores data for each field in the form
   const [endorseData, setEndorseData] = useState({
     id: id,
     FullName: fullname || "",
@@ -32,6 +38,8 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
     EndorseAttachment: null,
     Action: "",
   });
+
+  // handles submission of the form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -60,6 +68,8 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
       console.error("Error submitting form:", error);
     }
   };
+
+  // handles input to fields in the form, copying the existing instance of endorseData and updating the field that has been changed
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -72,6 +82,7 @@ const SignEndorse: React.FC<SignEndorseProp> = ({ id }) => {
       setEndorseData({ ...endorseData, [name]: value });
     }
   };
+
   return (
     <div style={{ margin: "1rem" }}>
       <h5>Endorse form below:</h5>

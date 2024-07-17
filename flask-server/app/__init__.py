@@ -1,11 +1,18 @@
 from flask import Flask
 from flask_cors import CORS
 
+# Responsible for creating flask application
+# Sets CORS settings to allow for browsers from any origin to query the flask backend
+# Registers various blueprints to allow for better segregation of API routes
+
+
 def create_app():
     app = Flask(__name__)
+
+    # sets CORS settings for the flask application, supporting credentials and accepting queries from any origin
     CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
-    # Register Blueprints
+    # Register Blueprints to allow for more organized API calls
     from app.routes.user_routes import user_bp
     from app.routes.submit_slmp_install import submit_install
     from app.routes.slmp_install import slmp_install

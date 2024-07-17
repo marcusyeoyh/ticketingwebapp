@@ -5,6 +5,10 @@ import NavBar from "../../../components/NavBar";
 import ShowDeleteSection1 from "../../../components/SLMP/Delete/Section 1/ShowDeleteSection1";
 import ShowDeleteSection2 from "../../../components/SLMP/Delete/Section 2/ShowDeleteSection2";
 
+// Page contains form and input fields for section 1 of a SLMP Delete request to allow for amendments to the request after being rejected
+// Contains existing information for Section 1 and 2 if they are not pending
+
+// datatype storing existing form information
 type FormStatus = {
   ROID: string;
   FullName: string;
@@ -27,6 +31,7 @@ type FormStatus = {
   Endorsed: string;
 };
 
+// data type storing users that have the endorsing officers role
 type UserInfo = {
   full_name: string;
   username: string;
@@ -38,6 +43,8 @@ const FormDeleteAmend = () => {
   const [data, setData] = useState<FormStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+
+  // state to store new data to amend the current request
   const [newData, setNewData] = useState({
     ROID: "",
     FullName: "",
@@ -61,6 +68,7 @@ const FormDeleteAmend = () => {
     FilePath: "",
   });
 
+  // states to manage the endorsing officer options, what the user has searched and what they have selected
   const [endorsingOfficers, setEndorsingOfficers] = useState<UserInfo[] | null>(
     null
   );
@@ -71,6 +79,7 @@ const FormDeleteAmend = () => {
   const [showEODropdown, setShowEODropdown] = useState(false);
   const [noEOAlert, setNoEOAlert] = useState(false);
 
+  // hook to obtain existing form data
   useEffect(() => {
     const fetchData = async () => {
       if (id) {
@@ -87,6 +96,7 @@ const FormDeleteAmend = () => {
     fetchData();
   }, []);
 
+  // hook to update new data state with existing data state
   useEffect(() => {
     if (data && id) {
       setNewData({
@@ -114,12 +124,14 @@ const FormDeleteAmend = () => {
     }
   }, [data]);
 
+  // hook to set current endorsing officer term to existing endorsing officer search term
   useEffect(() => {
     if (newData) {
       setEOSearchTerm(newData.EndorserID);
     }
   }, [data]);
 
+  // hook to fetch users under endorsing officer role
   useEffect(() => {
     const fetchEOData = async () => {
       try {
@@ -148,6 +160,7 @@ const FormDeleteAmend = () => {
     return <div>Error {eoError.message}</div>;
   }
 
+  // handles input to form fields and updates existing data state to reflect most updated information
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -161,6 +174,7 @@ const FormDeleteAmend = () => {
     }
   };
 
+  // handles form submission after checking that all required fields are filled in
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newData.EndorserID == "") {
@@ -178,6 +192,7 @@ const FormDeleteAmend = () => {
     }
   };
 
+  // handles search for endorsing officer
   const handleSearch = (
     e: React.ChangeEvent<HTMLInputElement>,
     setSearchTerm: React.Dispatch<React.SetStateAction<string>>,
@@ -204,6 +219,7 @@ const FormDeleteAmend = () => {
     }
   };
 
+  // handles selection of endorsing officer as a result from handleSearch
   const handleSelect = (
     field: "EndorserID" | "ApproverID" | "NewAssignee",
     officer: UserInfo,
@@ -222,6 +238,7 @@ const FormDeleteAmend = () => {
     setAlert(false);
   };
 
+  // handles event that user clicks away from current search box
   const clickAway = (
     setShowDropdown: React.Dispatch<React.SetStateAction<boolean>>
   ) => {

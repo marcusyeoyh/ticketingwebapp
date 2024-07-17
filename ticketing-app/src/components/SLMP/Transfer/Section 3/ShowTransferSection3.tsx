@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { findSec1Info } from "../../../API";
 
+// Component that shows all information for section 3 for the request
+// Does not show information if the request is still pending
+
+// prop that contains the id of the request being viewed
 type ShowTransferSection3Props = {
   id: string;
 };
 
+// data structure that stores all the information to be displayed
 type Section3Data = {
   Approved: string;
   ApproveFullName: string;
@@ -15,10 +20,12 @@ type Section3Data = {
 };
 
 const ShowTransferSection3: React.FC<ShowTransferSection3Props> = ({ id }) => {
+  // state that stores all section 2 data to be displayed
   const [sec3Data, setSec3Data] = useState<Section3Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  // hook to obtain all the information of a request given its id
   useEffect(() => {
     const findData = async () => {
       try {
@@ -54,6 +61,8 @@ const ShowTransferSection3: React.FC<ShowTransferSection3Props> = ({ id }) => {
           <p>Approve Status: {sec3Data?.Approved}</p>
         </div>
       </div>
+
+      {/* section will only show if the request has been endorsed*/}
       {sec3Data?.Approved != "Pending" && (
         <table
           style={{

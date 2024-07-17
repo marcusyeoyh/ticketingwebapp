@@ -4,20 +4,31 @@ import os
 import csv
 from io import StringIO
 
+# Responsible for all GET requests regarding SLMP Delete requests.
+# Connects to SQLite database to return results as JSON payload
+
+# defines blueprint for this file
 slmp_delete = Blueprint('slmpDelete', __name__)
 
+# defines absolute address for db
 def findDBPath(db_name):
     return os.path.join("databases", db_name)
 
+# returns history for all delete requests 
 @slmp_delete.route('/find-all', methods=['GET'])
-def find_slmp_install():
+def find_slmp_delete():
+    # obtain user parameter from GET request
     user = request.args.get('user')
 
     try:
+        # obtain absolute path for db
         db_path = findDBPath("SLMP.db")
+        # establish connection variable to db
         connection = sqlite3.connect(db_path)
+        # establish connection to db
         cursor = connection.cursor()
 
+        # SQL query to be sent to db
         query = '''
             SELECT t1.id AS RequestID, t2.Endorsed, t1.Date, t1.FullName
             FROM SLMPDelete t1
@@ -25,13 +36,18 @@ def find_slmp_install():
             WHERE t1.ROID = COALESCE(?,t1.ROID)    
         '''
         
+        # executes query on cursor using provided user variable
         cursor.execute(query, (user,))
+        # fetches result to variable results
         results = cursor.fetchall()
 
+        # creates list to append results to
         results_list = []
         for row in results:
+            # modify db data to more understandable information to be displayed to frontend
             endorsed_status = "Endorsed" if row[1] == 1 else "Pending" if row[1] == 0 else "Rejected"
 
+            # append dictionary to result list
             results_list.append({
                 "RequestID": row[0],
                 "Endorsed": endorsed_status,
@@ -39,11 +55,14 @@ def find_slmp_install():
                 "FullName": row[3]
             }) 
         
+        # end connection to db
         connection.close()
+        # return result as a json list
         return jsonify(results_list), 200
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
 
+# find all pending delete requests
 @slmp_delete.route('/find-pending', methods=['GET'])
 def findslmpdeletepending():
     user = request.args.get('user')
@@ -80,6 +99,7 @@ def findslmpdeletepending():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
     
+# returns all attributes for a particular request, will be parsed and the relevant attributes chosen to be displayed by the front end
 @slmp_delete.route('/full-form', methods=['GET'])
 def fullform():
     reqID = request.args.get('reqID')
@@ -146,6 +166,7 @@ def fullform():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
     
+# find all delete requests pending endorsement   
 @slmp_delete.route('/find-endorsements', methods=['GET'])
 def findslmpendorsements():
     username = request.args.get('user')
@@ -180,6 +201,7 @@ def findslmpendorsements():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
     
+# return all delete requests that have been rejected at any stage and are pending amendments
 @slmp_delete.route('/find-rejections', methods=['GET'])
 def findslmprejections():
     username = request.args.get('user')
@@ -216,6 +238,7 @@ def findslmprejections():
     except sqlite3.Error as e:
         return jsonify({"message": "Database error occurred", "error": str(e)}), 500
 
+# facilitates downloading of all delete request information as a csv (only used by admin)
 @slmp_delete.route('/downloadCSV', methods=['GET'])
 def downloadcsv():
     try:

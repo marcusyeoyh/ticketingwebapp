@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { downloadFile, findSec1Info } from "../../../API";
 
+// Component that shows all information for section 2 for the request
+// Does not show information if the request is still pending
+
+// datatype that stores id of request to be deleted
 type ShowDeleteSection2Props = {
   id: string;
 };
 
+// datatype that stores all form information to be displayed
 type Section2Data = {
   Endorsed: string;
   EndorseFullName: string;
@@ -25,6 +30,7 @@ const ShowDeleteSection2: React.FC<ShowDeleteSection2Props> = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  // hook to obtain all section 2 information to be displayed
   useEffect(() => {
     const findData = async () => {
       try {
@@ -47,6 +53,7 @@ const ShowDeleteSection2: React.FC<ShowDeleteSection2Props> = ({ id }) => {
     return <div>Error: {error.message}</div>;
   }
 
+  // handles downloading of attached file
   const handleDownload = () => {
     if (sec2Data?.EndorseAttachment) {
       downloadFile(sec2Data?.EndorseAttachment);
@@ -68,6 +75,7 @@ const ShowDeleteSection2: React.FC<ShowDeleteSection2Props> = ({ id }) => {
           <p>Endorse Status: {sec2Data?.Endorsed}</p>
         </div>
 
+        {/* download button if there exists an attached file */}
         {sec2Data?.EndorseAttachment && sec2Data?.Endorsed != "Pending" && (
           <button
             className="btn btn-primary"
