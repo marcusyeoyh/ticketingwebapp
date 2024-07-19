@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify, send_file
 import os
 
 # Responsible for downloading attachment as pdf document
-
 downloadFile = Blueprint('downloadFile', __name__)
 
 # download attachment as pdf document
