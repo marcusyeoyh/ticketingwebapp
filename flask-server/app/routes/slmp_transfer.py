@@ -81,7 +81,7 @@ def findslmptransferpending():
             SELECT t1.id AS RequestID, t2.Approved, t2.Endorsed, t2.Accepted, t1.Date
             FROM SLMPTransfer t1
             INNER JOIN SLMPTransferStatus t2 ON t1.id = t2.id
-            WHERE t1.ROID = ? AND (t2.Approved = 0 OR t2.Endorsed = 0) AND t2.Approved<>-1 AND t2.Endorsed<>-1
+            WHERE t1.ROID = ? AND (t2.Approved = 0 OR t2.Endorsed = 0 OR t2.Accepted = 0) AND t2.Approved<>-1 AND t2.Endorsed<>-1 AND t2.Accepted<>-1
         '''
         
         cursor.execute(query, (user,))

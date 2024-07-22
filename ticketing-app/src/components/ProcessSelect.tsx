@@ -23,31 +23,37 @@ const ProcessSelect = () => {
           </p>
           <div className="d-flex justify-content-around">
             {/* link to raise a new SLMP Install request */}
-            <NavLink
-              className="nav-link d-flex flex-column align-items-center"
-              to="/slmp-install"
-            >
-              <i className="bi bi-cloud-arrow-down download-icon"></i>
-              <span>Install Request</span>
-            </NavLink>
+            <div className="d-flex justify-content-center align-items-center">
+              <NavLink
+                className="nav-link d-flex flex-column align-items-center text-center"
+                to="/slmp-install"
+              >
+                <i className="bi bi-cloud-arrow-down download-icon"></i>
+                <span>Install Request</span>
+              </NavLink>
+            </div>
 
             {/* link to raise a new SLMP Transfer request */}
-            <NavLink
-              className="nav-link d-flex flex-column align-items-center"
-              to="/slmp-transfer"
-            >
-              <i className="bi bi-arrow-left-right"></i>
-              <span>Transfer Request</span>
-            </NavLink>
+            <div className="d-flex justify-content-center align-items-center">
+              <NavLink
+                className="nav-link d-flex flex-column align-items-center text-center"
+                to="/slmp-transfer"
+              >
+                <i className="bi bi-arrow-left-right"></i>
+                <span>Transfer Request</span>
+              </NavLink>
+            </div>
 
             {/* link to raise a new SLMP Delete request */}
-            <NavLink
-              className="nav-link d-flex flex-column align-items-center"
-              to="/slmp-delete"
-            >
-              <i className="bi bi-trash"></i>
-              <span>Remove License</span>
-            </NavLink>
+            <div className="d-flex justify-content-center align-items-center">
+              <NavLink
+                className="nav-link d-flex flex-column align-items-center text-center"
+                to="/slmp-delete"
+              >
+                <i className="bi bi-trash"></i>
+                <span>Remove License</span>
+              </NavLink>
+            </div>
           </div>
         </div>
       </div>

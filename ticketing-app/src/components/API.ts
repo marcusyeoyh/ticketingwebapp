@@ -114,7 +114,11 @@ export const downloadCSV = async (endpoint: string, type: string) => {
     const a = document.createElement("a");
     a.style.display = "none";
     a.href = url;
-    a.download = `slmp_${type}_data.csv`;
+
+    const now = new Date();
+    const dateString = now.toISOString();
+
+    a.download = `slmp_${type}_data_${dateString}.csv`;
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
