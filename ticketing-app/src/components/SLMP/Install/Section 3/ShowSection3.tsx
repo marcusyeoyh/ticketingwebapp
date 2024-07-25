@@ -62,7 +62,6 @@ const ShowSection3: React.FC<ShowSection3Props> = ({ id }) => {
           style={{
             width: "100%",
             borderCollapse: "collapse",
-            marginTop: "1rem",
           }}
         >
           <tbody>

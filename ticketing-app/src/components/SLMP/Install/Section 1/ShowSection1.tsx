@@ -6,6 +6,7 @@ import { downloadFile, findSec1Info } from "../../../API";
 
 type SLMPSec1Data = {
   ROID: string;
+  FullName: string;
   DivisionProgram: string;
   Date: string;
   Outside: string;
@@ -110,7 +111,7 @@ const ShowSection1: React.FC<ShowSection1Props> = ({ id }) => {
               }}
             >
               <b>Name of RO:</b>
-              <div>{sec1Data?.ROID}</div>
+              <div>{sec1Data?.FullName}</div>
             </td>
             <td
               style={{

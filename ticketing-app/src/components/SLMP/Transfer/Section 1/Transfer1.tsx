@@ -16,7 +16,7 @@ const formatDate = (date: Date) => {
 
 // datatype to store information for users in endorsing officer, approving officer and new assignees groups
 type UserInfo = {
-  full_name: string;
+  fullname: string;
   username: string;
 };
 
@@ -27,7 +27,7 @@ const Transfer1 = () => {
   // state to store input data
   const [formData, setFormData] = useState({
     ROID: user?.username || "",
-    FullName: user?.full_name || "",
+    FullName: user?.fullname || "",
     DivisionProgram: "",
     Date: curDate || "",
     EndorserID: "",
@@ -89,10 +89,10 @@ const Transfer1 = () => {
         ROID: user.username,
       }));
     }
-    if (user?.full_name) {
+    if (user?.fullname) {
       setFormData((prevData) => ({
         ...prevData,
-        FullName: user.full_name,
+        FullName: user.fullname,
       }));
     }
   }, [user]);
@@ -101,7 +101,7 @@ const Transfer1 = () => {
   useEffect(() => {
     const fetchEOData = async () => {
       try {
-        const data = await getUsers("Endorsing Officers");
+        const data = await getUsers("Endorsing Officer");
         setEndorsingOfficers(data);
       } catch (error) {
         setEOError(error as Error);
@@ -115,7 +115,7 @@ const Transfer1 = () => {
   useEffect(() => {
     const fetchAOData = async () => {
       try {
-        const data = await getUsers("Approving Officers");
+        const data = await getUsers("Approving Officer");
         setApprovingOfficers(data);
       } catch (error) {
         setAOError(error as Error);
@@ -129,7 +129,7 @@ const Transfer1 = () => {
   useEffect(() => {
     const fetchRData = async () => {
       try {
-        const data = await getUsers("Remote Desktop Users");
+        const data = await getUsers("Remote Desktop User");
         setRecipients(data);
       } catch (error) {
         setRError(error as Error);
@@ -214,7 +214,7 @@ const Transfer1 = () => {
       setFilteredOfficers([]);
     } else if (officers) {
       const filtered = officers.filter((officer) =>
-        officer.full_name.toLowerCase().includes(value.toLowerCase())
+        officer.fullname.toLowerCase().includes(value.toLowerCase())
       );
       if (filtered.length == 0) {
         setFormData((prevData) => ({
@@ -239,7 +239,7 @@ const Transfer1 = () => {
       ...prevData,
       [field]: officer.username,
     }));
-    setSearchTerm(officer.full_name);
+    setSearchTerm(officer.fullname);
     setFilteredOfficers([]);
     setShowDropdown(false);
     setAlert(false);
@@ -347,7 +347,7 @@ const Transfer1 = () => {
                       )
                     }
                   >
-                    {eo.full_name}
+                    {eo.fullname}
                   </li>
                 ))}
             </ul>
@@ -401,7 +401,7 @@ const Transfer1 = () => {
                       )
                     }
                   >
-                    {ao.full_name}
+                    {ao.fullname}
                   </li>
                 ))}
             </ul>
@@ -493,7 +493,7 @@ const Transfer1 = () => {
                       )
                     }
                   >
-                    {r.full_name}
+                    {r.fullname}
                   </li>
                 ))}
             </ul>

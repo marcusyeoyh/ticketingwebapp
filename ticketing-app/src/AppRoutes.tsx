@@ -1,6 +1,6 @@
 import HomePage from "./pages/Homepage";
 import Requests from "./pages/Requests";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Profile from "./pages/Profile";
 import SLMPInstall from "./pages/SLMP-requests/Install/SLMPInstall";
 import SLMPDelete from "./pages/SLMP-requests/Delete/SLMPDelete";
@@ -26,6 +26,9 @@ import ViewDeleteRequest from "./pages/SLMP-requests/Delete/ViewDeleteRequest";
 import EndorseDeleteRequest from "./pages/SLMP-requests/Delete/EndorseDeleteRequest";
 import FormDeleteAmend from "./pages/SLMP-requests/Delete/FormDeleteAmend";
 import AdminViewAll from "./pages/AdminViewAll";
+import { useUser } from "./UserContext";
+import Login from "./pages/Login";
+import { useEffect } from "react";
 
 /*
 Contains all the routes needed in the application
@@ -33,9 +36,18 @@ VerifyID, VerifyRoles and AcceptTransferRequest are all intermediary checks to e
 */
 
 const AppRoutes = () => {
+  const { user } = useUser();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      return navigate("/login");
+    }
+  }, [user]);
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/requests" element={<Requests />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/slmp-install" element={<SLMPInstall />} />
@@ -56,7 +68,7 @@ const AppRoutes = () => {
             requiredRole={[
               "Endorsing Officer",
               "Approving Officer",
-              "Administrators",
+              "Administrator",
             ]}
           />
         }
@@ -66,7 +78,7 @@ const AppRoutes = () => {
         element={
           <VerifyRole
             element={<ApproveRequests />}
-            requiredRole={["Approving Officer", "Administrators"]}
+            requiredRole={["Approving Officer", "Administrator"]}
           />
         }
       />
@@ -86,7 +98,7 @@ const AppRoutes = () => {
             requiredRole={[
               "Endorsing Officer",
               "Approving Officer",
-              "Administrators",
+              "Administrator",
             ]}
           />
         }
@@ -96,7 +108,7 @@ const AppRoutes = () => {
         element={
           <VerifyRole
             element={<ApproveTransferRequests />}
-            requiredRole={["Approving Officer", "Administrators"]}
+            requiredRole={["Approving Officer", "Administrator"]}
           />
         }
       />
@@ -116,7 +128,7 @@ const AppRoutes = () => {
             requiredRole={[
               "Endorsing Officer",
               "Approving Officer",
-              "Administrators",
+              "Administrator",
             ]}
           />
         }
@@ -130,7 +142,7 @@ const AppRoutes = () => {
         element={
           <VerifyRole
             element={<AdminViewAll />}
-            requiredRole={["Administrators"]}
+            requiredRole={["Administrator"]}
           />
         }
       />

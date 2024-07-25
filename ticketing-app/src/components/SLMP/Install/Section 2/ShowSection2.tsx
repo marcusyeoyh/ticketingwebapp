@@ -73,7 +73,6 @@ const ShowSection2: React.FC<ShowSection2Props> = ({ id }) => {
           )}
           <p>Endorse Status: {sec2Data?.Endorsed}</p>
         </div>
-
         {/* button to download attachment appears if an attachment exists */}
         {sec2Data?.EndorseAttachment && sec2Data?.Endorsed != "Pending" && (
           <button
@@ -96,7 +95,6 @@ const ShowSection2: React.FC<ShowSection2Props> = ({ id }) => {
           style={{
             width: "100%",
             borderCollapse: "collapse",
-            marginTop: "1rem",
           }}
         >
           <tbody>

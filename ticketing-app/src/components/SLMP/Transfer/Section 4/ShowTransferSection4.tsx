@@ -68,7 +68,6 @@ const ShowTransferSection4: React.FC<ShowTransferSection4Props> = ({ id }) => {
           style={{
             width: "100%",
             borderCollapse: "collapse",
-            marginTop: "1rem",
           }}
         >
           <tbody>

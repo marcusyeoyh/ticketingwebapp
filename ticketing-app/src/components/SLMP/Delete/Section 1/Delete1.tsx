@@ -16,7 +16,7 @@ const formatDate = (date: Date) => {
 
 // datatype to store users that are have endorsing officers, approving officers or regular users roles
 type UserInfo = {
-  full_name: string;
+  fullname: string;
   username: string;
 };
 
@@ -27,7 +27,7 @@ const Delete1 = () => {
   // state to store form data
   const [formData, setFormData] = useState({
     ROID: user?.username || "",
-    FullName: user?.full_name || "",
+    FullName: user?.fullname || "",
     DivisionProgram: "",
     Date: curDate || "",
     RemovalReason: "",
@@ -67,10 +67,10 @@ const Delete1 = () => {
         ROID: user.username,
       }));
     }
-    if (user?.full_name) {
+    if (user?.fullname) {
       setFormData((prevData) => ({
         ...prevData,
-        FullName: user.full_name,
+        FullName: user.fullname,
       }));
     }
   }, [user]);
@@ -79,7 +79,7 @@ const Delete1 = () => {
   useEffect(() => {
     const fetchEOData = async () => {
       try {
-        const data = await getUsers("Endorsing Officers");
+        const data = await getUsers("Endorsing Officer");
         setEndorsingOfficers(data);
       } catch (error) {
         setEOError(error as Error);
@@ -138,7 +138,7 @@ const Delete1 = () => {
       setFilteredEO([]);
     } else if (endorsingOfficers) {
       const filtered = endorsingOfficers.filter((eo) =>
-        eo.full_name.toLowerCase().includes(value.toLowerCase())
+        eo.fullname.toLowerCase().includes(value.toLowerCase())
       );
       setFilteredEO(filtered);
     }
@@ -156,7 +156,7 @@ const Delete1 = () => {
       ...prevData,
       EndorserID: officer.username,
     }));
-    setEOSearchTerm(officer.full_name);
+    setEOSearchTerm(officer.fullname);
     setFilteredEO([]);
     setShowEODropdown(false);
     setNoEOAlert(false);
@@ -257,7 +257,7 @@ const Delete1 = () => {
                     className="list-group-item list-group-item-action"
                     onClick={() => handleEOSelect(eo)}
                   >
-                    {eo.full_name}
+                    {eo.fullname}
                   </li>
                 ))}
             </ul>

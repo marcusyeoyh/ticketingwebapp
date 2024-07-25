@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 // data type that stores pending request information
 type SLMPEndorsements = {
   RequestID: number;
-  ROID: string;
+  FullName: string;
   EndorserID: string;
   ApproverID: string;
   Date: string;
@@ -26,19 +26,12 @@ const ShowSLMPEndorsements: React.FC<ShowEndorsementsProps> = ({
   const navigate = useNavigate();
 
   // obtains username of user
-  const { username, loadingUsername, errorUsername } = GetUsername();
+  const { username } = GetUsername();
 
   // states to store request information
   const [data, setData] = useState<SLMPEndorsements[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-
-  if (loadingUsername) {
-    return <div>Loading username...</div>;
-  }
-  if (errorUsername) {
-    return <div>Error: {errorUsername}</div>;
-  }
 
   // hook to obtain all request information that is pending endorsement
   useEffect(() => {
@@ -91,7 +84,7 @@ const ShowSLMPEndorsements: React.FC<ShowEndorsementsProps> = ({
           <thead>
             <tr>
               <th scope="col">Request ID</th>
-              <th scope="col">ROID</th>
+              <th scope="col">Requestor</th>
               <th scope="col">Endorser</th>
               <th scope="col">Approver</th>
               <th scope="col">Date Requested</th>
@@ -102,7 +95,7 @@ const ShowSLMPEndorsements: React.FC<ShowEndorsementsProps> = ({
             {data.map((request, index) => (
               <tr key={index} style={{ verticalAlign: "middle" }}>
                 <th scope="row">{request.RequestID}</th>
-                <td>{request.ROID}</td>
+                <td>{request.FullName}</td>
                 <td>{request.EndorserID}</td>
                 <td>{request.ApproverID}</td>
                 <td>{request.Date}</td>

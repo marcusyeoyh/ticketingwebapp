@@ -15,7 +15,7 @@ const formatDate = (date: Date) => {
 
 // stores user information which is used to autofill form for EndorserID, ApproverID
 type UserInfo = {
-  full_name: string;
+  fullname: string;
   username: string;
 };
 
@@ -48,7 +48,7 @@ const Install1: React.FC = () => {
   // stores all variables for the form
   const [formData, setFormData] = useState({
     ROID: user?.username || "",
-    FullName: user?.full_name || "",
+    FullName: user?.fullname || "",
     DivisionProgram: "",
     Date: curDate || "",
     Outside: "",
@@ -77,10 +77,10 @@ const Install1: React.FC = () => {
         ROID: user.username,
       }));
     }
-    if (user?.full_name) {
+    if (user?.fullname) {
       setFormData((prevData) => ({
         ...prevData,
-        FullName: user.full_name,
+        FullName: user.fullname,
       }));
     }
   }, [user]);
@@ -89,7 +89,7 @@ const Install1: React.FC = () => {
   useEffect(() => {
     const fetchEOData = async () => {
       try {
-        const data = await getUsers("Endorsing Officers");
+        const data = await getUsers("Endorsing Officer");
         setEndorsingOfficers(data);
       } catch (error) {
         setEOError(error as Error);
@@ -104,7 +104,7 @@ const Install1: React.FC = () => {
   useEffect(() => {
     const fetchAOData = async () => {
       try {
-        const data = await getUsers("Approving Officers");
+        const data = await getUsers("Approving Officer");
         setApprovingOfficers(data);
       } catch (error) {
         setAOError(error as Error);
@@ -180,7 +180,7 @@ const Install1: React.FC = () => {
       setFilteredOfficers([]);
     } else if (officers) {
       const filtered = officers.filter((officer) =>
-        officer.full_name.toLowerCase().includes(value.toLowerCase())
+        officer.fullname.toLowerCase().includes(value.toLowerCase())
       );
       if (filtered.length == 0) {
         setFormData((prevData) => ({
@@ -205,7 +205,7 @@ const Install1: React.FC = () => {
       ...prevData,
       [field]: officer.username,
     }));
-    setSearchTerm(officer.full_name);
+    setSearchTerm(officer.fullname);
     setFilteredOfficers([]);
     setShowDropdown(false);
     setAlert(false);
@@ -347,7 +347,7 @@ const Install1: React.FC = () => {
                         )
                       }
                     >
-                      {eo.full_name}
+                      {eo.fullname}
                     </li>
                   ))}
               </ul>
@@ -401,7 +401,7 @@ const Install1: React.FC = () => {
                         )
                       }
                     >
-                      {ao.full_name}
+                      {ao.fullname}
                     </li>
                   ))}
               </ul>

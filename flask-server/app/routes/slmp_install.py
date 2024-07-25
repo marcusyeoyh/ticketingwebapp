@@ -197,7 +197,7 @@ def findslmpendorsements():
         cursor = connection.cursor()
 
         query = '''
-        SELECT t1.id AS RequestID, t1.ROID, t1.EndorserID, t1.ApproverID, t1.Date
+        SELECT t1.id AS RequestID, t1.FullName, t1.EndorserID, t1.ApproverID, t1.Date
         FROM SLMPInstall t1
         INNER JOIN SLMPInstallStatus t2 ON t1.id = t2.id
         WHERE t1.EndorserID = ? AND t2.Endorsed = 0 
@@ -210,7 +210,7 @@ def findslmpendorsements():
         for row in results:
             results_list.append({
                 "RequestID": row[0],
-                "ROID": row[1],
+                "FullName": row[1],
                 "EndorserID": row[2],
                 "ApproverID": row[3],
                 "Date": row[4]

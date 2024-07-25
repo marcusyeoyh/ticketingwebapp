@@ -15,15 +15,7 @@ type VerifyRoleProps = {
 
 const VerifyRole: React.FC<VerifyRoleProps> = ({ element, requiredRole }) => {
   //gets user role of the logged in user
-  const { userRole, loadingRole, errorRole } = GetRole();
-
-  //handles loading and errors when loading user role
-  if (loadingRole) {
-    return <div>Loading User Role...</div>;
-  }
-  if (errorRole) {
-    return <div>Error: {errorRole}</div>;
-  }
+  const { userRole } = GetRole();
 
   //redirects to unauthorized page if there is no user role detected
   if (!userRole) {

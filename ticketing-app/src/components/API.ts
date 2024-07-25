@@ -179,3 +179,22 @@ export const deleteReq = async (endpoint: string, reqID: string) => {
     throw error;
   }
 };
+
+export const loginUser = async (username: string, password: string) => {
+  try {
+    const response = await axios.post(
+      `${apiUrl}/utils/login`,
+      {
+        username: username,
+        password: password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error with login", error.response || error.message || error);
+    throw error;
+  }
+};

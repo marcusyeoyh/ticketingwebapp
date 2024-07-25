@@ -12,7 +12,7 @@ const NavBar = () => {
   const { user } = useUser();
 
   // loads full name of user account
-  const fullName = user?.full_name;
+  const fullName = user?.fullname;
 
   // function to handle click of the User Guide button. Enables the downloading of user guide
   const handleClick = (e: React.FormEvent) => {
@@ -24,10 +24,10 @@ const NavBar = () => {
     <nav className="navbar sticky-top navbar-expand-lg navbar-custom">
       <div className="container-fluid">
         {/* Banner of application */}
-        <a className="navbar-brand d-flex align-items-center" href="/">
+        <NavLink className="navbar-brand d-flex align-items-center" to="/">
           <i className="bi bi-telegram"></i>
           <h3>Ticketing System</h3>
-        </a>
+        </NavLink>
         {/* Button for collapsed navbar if window resolution is small */}
         <button
           className="navbar-toggler"
@@ -68,7 +68,7 @@ const NavBar = () => {
             </li>
           </div>
           <div className="d-flex">
-            {user?.user_role == "Administrators" && (
+            {user?.role == "Administrator" && (
               // privileged button to view all requests that is only visible if the user has the administrators role
               <NavLink
                 exact="true"

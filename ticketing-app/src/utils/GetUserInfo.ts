@@ -6,47 +6,26 @@ Contains functions that call the User context and return specific attributes of 
 
 //returns username of user - unique identifier for users in the Active Directory
 export const GetUsername = () => {
-  const { user, loading, error } = useUser();
-  if (loading || !user) {
-    return { username: null, loading: true, error: null };
-  }
-  if (error) {
-    return { username: null, loading: false, error };
-  }
+  const { user } = useUser();
   return {
     username: user?.username,
-    loadingUsername: false,
-    errorUsername: null,
   };
 };
 
 //returns full name of user, used in forms
 export const GetFullName = () => {
-  const { user, loading, error } = useUser();
-  if (loading || !user) {
-    return { fullname: null, loading: true, error: null };
-  }
-  if (error) {
-    return { fullname: null, loading: false, error };
-  }
+  const { user } = useUser();
   return {
-    fullname: user?.full_name,
-    loadingFullname: false,
-    errorFullname: null,
+    fullname: user?.fullname,
   };
 };
 
 //returns role of user, used in role checking for endorsing and approvals
 export const GetRole = () => {
-  const { user, loading, error } = useUser();
-  if (loading || !user) {
-    return { fullname: null, loading: true, error: null };
-  }
-  if (error) {
-    return { fullname: null, loading: false, error };
-  }
+  const { user } = useUser();
+
   return {
-    userRole: user?.user_role,
+    userRole: user?.role,
     loadingRole: false,
     errorRole: null,
   };
